@@ -45,25 +45,11 @@ public class Attack : MonoBehaviour
         cur_target = target;
     }
 
-    private string get_attack_direction(GameObject target) {
-        float x_dif = target.transform.position.x - transform.position.x;
-        float y_dif = target.transform.position.y - transform.position.y;
-        if (Mathf.Abs(x_dif) > Mathf.Abs(y_dif)) {
-            if (x_dif > 0) {
-                return "right";
-            }
-            return "left";
-        } else {
-            if (y_dif > 0) {
-                return "up";
-            }
-            return "down";
-        }
-    }
-
     private void attack() {
-        string trigger_name = "attack_" + get_attack_direction(cur_target); 
-        animator.SetTrigger(trigger_name);
+        animator.SetFloat("x_attack", cur_target.transform.position.x - transform.position.x);
+        animator.SetFloat("y_attack", cur_target.transform.position.y - transform.position.y);
+
+        animator.SetTrigger("attack");
         cur_attack_cooldown = attack_cooldown;
     }
 
