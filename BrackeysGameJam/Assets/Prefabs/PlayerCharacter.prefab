@@ -120,9 +120,10 @@ GameObject:
   - component: {fileID: 5087964645796094860}
   - component: {fileID: 5087964645796094849}
   - component: {fileID: 5087964645796094848}
+  - component: {fileID: 718428882}
   m_Layer: 8
   m_Name: PlayerCharacter
-  m_TagString: Untagged
+  m_TagString: Hero
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -237,3 +238,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 133644cea16e44182bdfafd071b4e0b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &718428882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5087964645796094861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59841c07892eb5d4fa81b4eb3039f44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  freezeZ: 1
+  targetRot: {x: 0, y: 0, z: 0, w: 0}
