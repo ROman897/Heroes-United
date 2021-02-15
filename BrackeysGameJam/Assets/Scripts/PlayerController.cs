@@ -20,59 +20,38 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        
     }
 
     void Start()
     {
-        StartCoroutine(onCoroutine());
-        //InvokeRepeating("UpdateTarget"), 1f, 0.5f); //0f, 0.01f
-        //InvokeRepeating("LaunchProjectile", 2.0f, 0.3f);
+        StartCoroutine(PlacecenterPoint());
     }
-    IEnumerator onCoroutine()
+    IEnumerator PlacecenterPoint()
+    {
+        while (true)
         {
-            while (true)
-            {
-                //Debug.Log("OnCoroutine: " + (int)Time.time);
-                yield return new WaitForSeconds(0.3f);
-                 children = GameObject.FindGameObjectsWithTag("Hero"); //get all children
-                centerPoint = GetCenterPoint();
-            }
+            yield return new WaitForSeconds(0.3f);
+            children = GameObject.FindGameObjectsWithTag("Hero"); //get all children
+            centerPoint = GetCenterPoint();
         }
-        Vector3 GetCenterPoint()
+    }
+    Vector3 GetCenterPoint()
+    {
+    if (children.Length == 1)
+    {
+        return children[0].transform.position;
+        }
+        var bounds = new Bounds(children[0].transform.position, Vector3.zero);
+        for (int i = 0; i < children.Length; i++)
         {
-            if (children.Length == 1)
-            {
-                return children[0].transform.position;
-            }
-
-            var bounds = new Bounds(children[0].transform.position, Vector3.zero);
-            for (int i = 0; i < children.Length; i++)
-            {
-                bounds.Encapsulate(children[i].transform.position);
-            }
-
-            return bounds.center; //returns the center point of the GamObject Array
+            bounds.Encapsulate(children[i].transform.position);
         }
+        return bounds.center; //returns the center point of the GamObject Array
+    }
     void Update()
     {
-        if (Input.GetKeyDown("h"))
-        {
-            
-            //children = GetChildren(this.gameObject);
-           
-            //foreach (Transform child in transform)
-            //    print("Foreach loop: " + child);
-        }
-
-        
-        //transform.GetChild(0).gameObject;
-
-     
-
         if (FollowsMousePos) faceTowardsMouse();
         if (Q_and_E_to_rotate) Rotation();
-
         float y_movement = 0;
         if (Input.GetKey("w"))
         {
@@ -108,17 +87,13 @@ public class PlayerController : MonoBehaviour
             movement = movement.normalized * movement_speed;
             //moving = false;
         }
-
         rb.velocity = movement;
         global_movement_dir = movement;
-
         void faceTowardsMouse()
         {
             Vector3 mousePosition = Input.mousePosition;
             mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
             Vector2 dir = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
-
             transform.up = dir;
         }
         void Rotation()
@@ -144,43 +119,16 @@ public class PlayerController : MonoBehaviour
 
 
 
-        
 
-        
+        //Should Actually get the children but somehow doesnt work :/
 
-        GameObject[] GetChildren(GameObject parent)
-        {
-            for (int i = 0; i < parent.transform.childCount; ++i)
-            {
-                //print(parent.transform.childCount);
-                //print(parent.transform.GetChild(i).gameObject.name);
-                childs[i] = parent.transform.GetChild(i).gameObject;
-            }
-            return childs;
-        }
-
-        //static List<GameObject> GetAllChilds(this GameObject Go)
-        //{
-        //    List<GameObject> list = new List<GameObject>();
-        //    for (int i = 0; i < Go.transform.childCount; i++)
-        //    {
-        //        list.Add(Go.transform.GetChild(i).gameObject);
-        //    }
-        //    return list;
-        //}
-
-        //static GameObject[] GetAllChildrenObjects()
-        //{
-        //    GameObject[] list; //= new GameObject[];
-        //    public float hello;
-        //    for (int i = 0; i< this.transform.childCount; i++)
-        //    {
-        //        list[i] = this.transform.GetChild(i).gameObject;
-
-        //    }
-        //    return list;
-        //}
-
-        
+        // GameObject[] GetChildren(GameObject parent)
+        // {
+        //     for (int i = 0; i < parent.transform.childCount; ++i)
+        //     {
+        //         childs[i] = parent.transform.GetChild(i).gameObject;
+        //     }
+        //     return childs;
+        // }
     }
 }
