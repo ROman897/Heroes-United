@@ -12,11 +12,11 @@ public class PlayerController : MonoBehaviour
     private bool FollowsMousePos;
     [SerializeField]
     private bool Q_and_E_to_rotate;
-    public Vector3 centerPoint;
+    private Vector3 centerPoint;
     private Rigidbody2D rb;
     public static Vector2 global_movement_dir = Vector2.zero;
-    public GameObject[] children;
-    public GameObject[] childs;
+    private GameObject[] children;
+    private GameObject[] childs;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (FollowsMousePos) faceTowardsMouse();
+        if (FollowsMousePos && Input.GetMouseButton(0)) faceTowardsMouse();
         if (Q_and_E_to_rotate) Rotation();
         float y_movement = 0;
         if (Input.GetKey("w"))
@@ -89,6 +89,9 @@ public class PlayerController : MonoBehaviour
         }
         rb.velocity = movement;
         global_movement_dir = movement;
+
+
+    }
         void faceTowardsMouse()
         {
             Vector3 mousePosition = Input.mousePosition;
@@ -130,5 +133,5 @@ public class PlayerController : MonoBehaviour
         //     }
         //     return childs;
         // }
-    }
+    
 }
