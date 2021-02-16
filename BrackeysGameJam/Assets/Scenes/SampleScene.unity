@@ -232,7 +232,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.38812748, g: 0.41695842, b: 0.46226418, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -411,17 +411,17 @@ PrefabInstance:
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.2
+      value: 0.21200001
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.266
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
@@ -486,17 +486,17 @@ PrefabInstance:
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.2
+      value: 0.21200001
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.234
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
@@ -560,7 +560,7 @@ GameObject:
   m_Layer: 0
   m_Name: PlayerParty
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -617,7 +617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement_speed: 1
   rotation_speed: 90
-  FollowsMousePos: 0
+  FollowsMousePos: 1
   Q_and_E_to_rotate: 1
   centerPoint: {x: 0, y: 0, z: 0}
   children: []
@@ -637,17 +637,17 @@ PrefabInstance:
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.2
+      value: -0.188
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.266
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
@@ -799,12 +799,12 @@ PrefabInstance:
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.21700001
+      value: -0.205
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.050000012
+      value: -0.284
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
