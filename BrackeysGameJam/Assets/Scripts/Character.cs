@@ -12,6 +12,9 @@ public class Character : MonoBehaviour
 
     private Image health_image;
 
+    [SerializeField]
+    private Rigidbody2D rb;
+
     void Awake() {
         hp = max_hp;
         health_image = transform.Find("HealthCanvas/Health").GetComponent<Image>();
@@ -25,6 +28,11 @@ public class Character : MonoBehaviour
 
     private void refresh_health_bar() {
         health_image.fillAmount = hp / max_hp;
+    }
+
+    public Vector2 get_expected_pos_at(float time) {
+        return transform.position;
+        // return (Vector2)transform.position + rb.velocity * time;
     }
 
     void Start()
