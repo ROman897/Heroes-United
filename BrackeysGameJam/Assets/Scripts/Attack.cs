@@ -15,11 +15,14 @@ public class Attack : MonoBehaviour
 
     private Animator animator;
 
+    private PlayerCharacterController character_controller;
+
     void Awake() {
         CollisionTrigger attack_trigger = transform.Find("AttackTrigger").GetComponent<CollisionTrigger>();
         attack_trigger.on_trigger_enter.AddListener(add_enemy);
         attack_trigger.on_trigger_exit.AddListener(remove_enemy);
         animator = GetComponent<Animator>();
+        character_controller = GetComponent<PlayerCharacterController>();
     }
 
     private void add_enemy(GameObject enemy) {
@@ -48,6 +51,9 @@ public class Attack : MonoBehaviour
     private void attack() {
         animator.SetFloat("x_attack", cur_target.transform.position.x - transform.position.x);
         animator.SetFloat("y_attack", cur_target.transform.position.y - transform.position.y);
+
+        animator.SetFloat("x_dir", cur_target.transform.position.x - transform.position.x);
+        animator.SetFloat("y_dir", cur_target.transform.position.y - transform.position.y);
 
         animator.SetTrigger("attack");
         cur_attack_cooldown = attack_cooldown;
