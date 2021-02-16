@@ -229,6 +229,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_hp: 4
   rb: {fileID: 0}
+  dead_body_prefab: {fileID: 0}
+  body_disappear_time: 1
+  delete_after_die: 1
 --- !u!1 &2536719533561552557
 GameObject:
   m_ObjectHideFlags: 0

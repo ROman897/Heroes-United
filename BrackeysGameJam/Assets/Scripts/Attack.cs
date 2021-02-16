@@ -23,14 +23,14 @@ public abstract class Attack : MonoBehaviour
 
     private Animator animator;
 
-    private PlayerCharacterController character_controller;
+    private Character character;
 
     protected void Awake() {
         CollisionTrigger attack_trigger = transform.Find("AttackTrigger").GetComponent<CollisionTrigger>();
         attack_trigger.on_trigger_enter.AddListener(add_enemy);
         attack_trigger.on_trigger_exit.AddListener(remove_enemy);
         animator = GetComponent<Animator>();
-        character_controller = GetComponent<PlayerCharacterController>();
+        character = GetComponent<Character>();
     }
 
     private void add_enemy(GameObject enemy) {
@@ -72,6 +72,9 @@ public abstract class Attack : MonoBehaviour
     protected abstract void instantiate_attack(GameObject target);
 
     void Update() {
+        if (!character.is_alive()) {
+            return;
+        }
         if (cur_attack_cooldown > 0.0f) {
             cur_attack_cooldown -= Time.deltaTime;
             return;

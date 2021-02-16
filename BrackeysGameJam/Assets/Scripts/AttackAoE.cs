@@ -5,19 +5,16 @@ using UnityEngine;
 public class AttackAoE : MonoBehaviour
 {
     private HashSet<Character> enemies_in_hitbox = new HashSet<Character>();
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    private List<Character> characters_to_remove = new List<Character>();
 
     public void trigger(Effect effect) {
+        List<Character> hit_enemies = new List<Character>();
+
         foreach (Character character in enemies_in_hitbox) {
+            hit_enemies.Add(character);
+        }
+
+        foreach (Character character in hit_enemies) {
             character.apply_effect(effect);
         }
     }
