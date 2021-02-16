@@ -4,24 +4,30 @@ using UnityEngine;
 
 public class PlayerCharacterController : MonoBehaviour
 {
-    private Animator animator;
+    private Character character;
 
-    void Start()
-    {
-        
-    }
+    bool delayed_command = false;
+    private Vector2 target_pos;
 
     void Awake() {
-        animator = GetComponent<Animator>();
+        character = GetComponent<Character>();
     }
 
-    void Update()
-    {
-        bool moving = PlayerController.global_movement_dir != Vector2.zero;
-        animator.SetBool("moving", moving);
-        if (moving) {
-            animator.SetFloat("x_dir", PlayerController.global_movement_dir.x);
-            animator.SetFloat("y_dir", PlayerController.global_movement_dir.y);
+    public void move_command(Vector2 world_pos) {
+        if (!character.is_alive()) {
+            return;
+        }
+        if (character.get_state() == CharacterState.ATTACKING) {
+            delayed_command = true;
+            return;
+        }
+        delayed_command = false;
+        character.move_to(world_pos);
+    }
+
+    void Update() {
+        if (delayed_command) {
+            move_command(target_pos);
         }
     }
 }
