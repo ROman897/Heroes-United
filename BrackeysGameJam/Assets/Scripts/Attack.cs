@@ -25,6 +25,10 @@ public abstract class Attack : MonoBehaviour
 
     private Character character;
 
+    public bool is_attacking() {
+        return enemies_in_range.Count > 0;
+    }
+
     protected void Awake() {
         CollisionTrigger attack_trigger = transform.Find("AttackTrigger").GetComponent<CollisionTrigger>();
         attack_trigger.on_trigger_enter.AddListener(add_enemy);

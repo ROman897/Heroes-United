@@ -574,6 +574,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyCharacter Variant (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4793011435484034571, guid: 9577ef398ca6fa2b0a8c491b41b71e86,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9577ef398ca6fa2b0a8c491b41b71e86, type: 3}
 --- !u!1 &478208118
@@ -744,6 +749,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCharacterArcher Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693464478596271637, guid: 6f395b4924464150894bd8dc3bbfae5b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1693464478596271638, guid: 6f395b4924464150894bd8dc3bbfae5b,
         type: 3}
@@ -1194,6 +1204,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyCharacter Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4793011435484034571, guid: 9577ef398ca6fa2b0a8c491b41b71e86,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9577ef398ca6fa2b0a8c491b41b71e86, type: 3}
 --- !u!1001 &1063889317
@@ -1207,6 +1222,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCharacter (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5087964645796094861, guid: 4fd94b8e4e030dfc09a06b80873572bc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
@@ -1355,6 +1375,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCharacter (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5087964645796094861, guid: 4fd94b8e4e030dfc09a06b80873572bc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5087964645796094862, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}
@@ -2314,6 +2339,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 4793011435484034571, guid: 9577ef398ca6fa2b0a8c491b41b71e86,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9577ef398ca6fa2b0a8c491b41b71e86, type: 3}
 --- !u!1001 &2536719534468556501
@@ -2327,6 +2357,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCharacterArcher
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536719533023009273, guid: 943d961858e3b38aa80a0c908bd43da1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2536719533023009274, guid: 943d961858e3b38aa80a0c908bd43da1,
         type: 3}
@@ -2451,6 +2486,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242861935190913207, guid: 4fd94b8e4e030dfc09a06b80873572bc,
+        type: 3}
+      propertyPath: max_hp
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fd94b8e4e030dfc09a06b80873572bc, type: 3}

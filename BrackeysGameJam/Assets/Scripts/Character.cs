@@ -30,6 +30,18 @@ public class Character : MonoBehaviour
 
     private float death_timer = 0.0f;
 
+    [SerializeField]
+    private float movement_speed;
+
+    public void move_to(Vector2 pos) {
+        Debug.Log("move to targeet");
+        rb.velocity = (pos - (Vector2)transform.position).normalized * movement_speed;
+    }
+
+    public void stop_movement() {
+        rb.velocity = Vector2.zero;
+    }
+
     public bool is_alive() {
         return alive;
     }
@@ -38,6 +50,7 @@ public class Character : MonoBehaviour
         hp = max_hp;
         health_image = transform.Find("HealthCanvas/Health").GetComponent<Image>();
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     public void apply_effect(Effect effect) {
@@ -54,6 +67,9 @@ public class Character : MonoBehaviour
         }
         alive = false;
         transform.parent = null;
+        if (rb != null) {
+            rb.velocity = Vector2.zero;
+        }
         animator.SetTrigger("die");
     }
 
