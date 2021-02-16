@@ -10,6 +10,8 @@ public class FreezeRotation : MonoBehaviour
     {
         targetRot = transform.rotation;
     }
+
+    // Update is called once per frame
     void Update()
     {
         if (freezeZ)
