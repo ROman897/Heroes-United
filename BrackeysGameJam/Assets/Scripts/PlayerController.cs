@@ -79,13 +79,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //bool moving = true;
-
         Vector2 movement = new Vector2(x_movement, y_movement);
         if (movement != Vector2.zero)
         {
             movement = movement.normalized * movement_speed;
-            //moving = false;
         }
         rb.velocity = movement;
         global_movement_dir = movement;

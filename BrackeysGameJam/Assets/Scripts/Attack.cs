@@ -2,8 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+[System.Serializable]
+public class Effect {
+    public float damage;
+}
+
+public abstract class Attack : MonoBehaviour
 {
+    [SerializeField]
+    protected Effect attack_effect;
+
     private HashSet<GameObject> enemies_in_range = new HashSet<GameObject>();
 
     private GameObject cur_target;
@@ -17,7 +25,7 @@ public class Attack : MonoBehaviour
 
     private PlayerCharacterController character_controller;
 
-    void Awake() {
+    protected void Awake() {
         CollisionTrigger attack_trigger = transform.Find("AttackTrigger").GetComponent<CollisionTrigger>();
         attack_trigger.on_trigger_enter.AddListener(add_enemy);
         attack_trigger.on_trigger_exit.AddListener(remove_enemy);
@@ -57,7 +65,11 @@ public class Attack : MonoBehaviour
 
         animator.SetTrigger("attack");
         cur_attack_cooldown = attack_cooldown;
+
+        instantiate_attack(cur_target);
     }
+
+    protected abstract void instantiate_attack(GameObject target);
 
     void Update() {
         if (cur_attack_cooldown > 0.0f) {
