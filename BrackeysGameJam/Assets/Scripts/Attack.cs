@@ -75,16 +75,49 @@ public abstract class Attack : MonoBehaviour
 
     protected abstract void instantiate_attack(GameObject target);
 
-    void Update() {
-        if (!character.is_alive()) {
+    private void cancel_attack_if_no_enemies() {
+        if (character.get_state() != CharacterState.ATTACKING) {
             return;
         }
+        if (cur_target == null) {
+            character.set_state(CharacterState.IDLE);
+        }
+    }
+
+    private void try_initiate_attacking() {
+        if (character.get_state() != CharacterState.IDLE || cur_target == null) {
+            return;
+        }
+        Debug.Log("initiate attaaaack");
+        character.set_state(CharacterState.ATTACKING);
+    }
+
+    private void try_attack() {
         if (cur_attack_cooldown > 0.0f) {
             cur_attack_cooldown -= Time.deltaTime;
             return;
         }
+
+        if (character.get_state() != CharacterState.ATTACKING) {
+            return;
+        }
+        if (character.get_action() != CharacterAction.IDLE) {
+            return;
+        }
+
         if (cur_target != null) {
             attack();
         }
+    }
+
+    void Update() {
+        if (!character.is_alive()) {
+            return;
+        }
+
+        cancel_attack_if_no_enemies();
+        try_initiate_attacking();
+        try_attack();
+
     }
 }

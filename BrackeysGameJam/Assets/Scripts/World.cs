@@ -9,6 +9,9 @@ public class World : MonoBehaviour
 
     private HashSet<Vector2Int> passable_tiles = new HashSet<Vector2Int>();
 
+    private Dictionary<Vector2Int, List<Character>> characters = new Dictionary<Vector2Int, List<Character>>();
+    private Dictionary<Character, Vector2Int> active_movements = new Dictionary<Character, Vector2Int>();
+
     private Tilemap floor_tilemap;
 
     public static World singleton() {
@@ -19,6 +22,55 @@ public class World : MonoBehaviour
             }
         }
         return instance;
+    }
+
+    public void add_character(Vector2 position, Character character) {
+        Vector2Int tile_coords = world_to_coord(position);
+        _add_character(tile_coords, character);
+    }
+
+    private void _add_character(Vector2Int tile_coords, Character character) {
+        List<Character> characters_on_tile;
+        if (!characters.TryGetValue(tile_coords, out characters_on_tile)) {
+            characters.Add(tile_coords, characters_on_tile = new List<Character>());
+        }
+        characters_on_tile.Add(character);
+    }
+
+    public void remove_character(Vector2 position, Character character) {
+        Vector2Int tile_coords = world_to_coord(position);
+        _remove_character(tile_coords, character);
+    }
+
+    private void _remove_character(Vector2Int tile_coords, Character character) {
+        characters[tile_coords].Remove(character);
+    }
+
+    public void character_started_moving(Vector2 old_pos, Vector2 new_pos, Character character) {
+        remove_character(old_pos, character);
+        add_character(new_pos, character);
+        Vector2Int new_tile_coords = world_to_coord(new_pos);
+        active_movements[character] = new_tile_coords;
+    }
+
+    public void character_stopped(Vector2 new_pos, Character character) {
+        Vector2Int old_dest_coords = active_movements[character];
+        Vector2Int new_tile_coords = world_to_coord(new_pos);
+        if (old_dest_coords == new_tile_coords) {
+            return;
+        }
+        _remove_character(old_dest_coords, character);
+        _add_character(new_tile_coords, character);
+        active_movements.Remove(character);
+    }
+
+    public int get_population_on_tile(Vector2 position) {
+        Vector2Int tile_coords = world_to_coord(position);
+        List<Character> characters_on_tile;
+        if (characters.TryGetValue(tile_coords, out characters_on_tile)) {
+            return characters_on_tile.Count;
+        }
+        return 0;
     }
 
     void Awake() {

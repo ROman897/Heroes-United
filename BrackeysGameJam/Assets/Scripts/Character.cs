@@ -5,29 +5,35 @@ using UnityEngine.UI;
 
 public enum CharacterState {
     IDLE,
-    MOVING,
+    COMMAND_MOVE,
     ATTACKING
+}
+
+public enum CharacterAction {
+    IDLE,
+    MOVING,
+    SPECIAL
 }
 
 public class Character : MonoBehaviour
 {
+    public const float meele_range = 0.4f;
+
     private CharacterState character_state = CharacterState.IDLE;
+    private CharacterAction character_action = CharacterAction.IDLE;
+
     private List<Vector2> cur_path;
     private int next_path_point_index;
     private Vector2 next_path_point;
 
     [SerializeField]
     private float max_hp;
-
     private float hp;
 
     private Image health_image;
 
     [SerializeField]
     private Rigidbody2D rb;
-
-    [SerializeField]
-    private GameObject dead_body_prefab;
 
     private bool alive = true;
 
@@ -50,6 +56,18 @@ public class Character : MonoBehaviour
         return character_state;
     }
 
+    public CharacterAction get_action() {
+        return character_action;
+    }
+
+    public void set_state(CharacterState character_state) {
+        this.character_state = character_state;
+    }
+
+    public void set_action(CharacterAction character_action) {
+        this.character_action = character_action;
+    }
+
     private void move_along_path(int index) {
         next_path_point_index = index;
         next_path_point = cur_path[next_path_point_index]; 
@@ -58,23 +76,25 @@ public class Character : MonoBehaviour
 
     public void move_to(Vector2 pos) {
         cur_path = PathFinding.singleton().find_path(transform.position, pos);
-        Debug.Log("paath from: " + transform.position + "to: " + pos);
         for (int i = cur_path.Count - 1; i >= 0; --i) {
-            Debug.Log(cur_path[i]);
         }
-        Debug.Log("-------------------------------------");
         if (cur_path == null || cur_path.Count == 0) {
             return;
         }
+
+        stop_movement();
+        World.singleton().character_started_moving(transform.position, pos, this);
+
         animator.SetBool("moving", true);
-        character_state = CharacterState.MOVING;
+        character_action = CharacterAction.MOVING;
         move_along_path(cur_path.Count - 1);
     }
 
     public void stop_movement() {
-        if (character_state == CharacterState.MOVING) {
+        if (character_action == CharacterAction.MOVING) {
             animator.SetBool("moving", false);
-            character_state = CharacterState.IDLE;
+            character_action = CharacterAction.IDLE;
+            World.singleton().character_stopped(transform.position, this);
         }
         rb.velocity = Vector2.zero;
     }
@@ -88,6 +108,10 @@ public class Character : MonoBehaviour
         health_image = transform.Find("HealthCanvas/Health").GetComponent<Image>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Start() {
+        World.singleton().add_character(transform.position, this);
     }
 
     public void apply_effect(Effect effect) {
@@ -104,10 +128,9 @@ public class Character : MonoBehaviour
         }
         alive = false;
         transform.parent = null;
-        if (rb != null) {
-            rb.velocity = Vector2.zero;
-        }
+        stop_movement();
         animator.SetTrigger("die");
+        World.singleton().remove_character(transform.position, this);
     }
 
     private void refresh_health_bar() {
@@ -119,7 +142,7 @@ public class Character : MonoBehaviour
     }
 
     private void handle_movement() {
-        if (character_state != CharacterState.MOVING) {
+        if (character_action != CharacterAction.MOVING) {
             return;
         }
         if (((Vector2)transform.position - next_path_point).sqrMagnitude < movement_epsilon) {
