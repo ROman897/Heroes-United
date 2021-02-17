@@ -17,7 +17,7 @@ public class Aggro : MonoBehaviour
     private const float meele_position_randomization = 0.1f;
 
     private Vector2 last_enemy_pos;
-    private const float pos_diff_to_recalculate = 0.4f;
+    private const float pos_diff_to_recalculate = 0.6f;
 
     void Awake() {
         character = transform.parent.GetComponent<Character>();
@@ -35,12 +35,16 @@ public class Aggro : MonoBehaviour
         pick_new_target();
 
         if (cur_target == null) {
+            Debug.Log("cancelling combat no enemy found");
             character.set_state(CharacterState.IDLE);
+        } else {
+            try_go_to_target();
         }
     }
 
     private void pick_new_target() {
         if (enemies_in_range.Count == 0) {
+            // Debug.Log("cannot pick new target, nobody nearby");
             return;
         }
         Character[] enemy_chars = new Character[enemies_in_range.Count];
@@ -81,7 +85,9 @@ public class Aggro : MonoBehaviour
             return;
         }
 
+        Debug.Log("initiated combat");
         character.set_state(CharacterState.ATTACKING);
+        try_go_to_target();
         Debug.Log("attacking");
     }
 
@@ -106,7 +112,6 @@ public class Aggro : MonoBehaviour
                 Vector2 new_pos = new Vector2(x, y); 
 
                 if (!World.singleton().is_pos_passable(new_pos)) {
-                    Debug.Log("is not pasableee");
                     continue;
                 }
 
@@ -120,7 +125,6 @@ public class Aggro : MonoBehaviour
                 }
             }
         }
-        Debug.Log("count: " + least_populated_tiles.Count);
         if (least_populated_tiles.Count == 0) {
             return;
         }
@@ -128,7 +132,6 @@ public class Aggro : MonoBehaviour
             return;
         }
         Vector2 chosen_pos = least_populated_tiles[Random.Range(0, least_populated_tiles.Count)];
-        Debug.Log("chosen pos: " + chosen_pos);
         last_enemy_pos = cur_target.transform.position;
         character.move_to(chosen_pos);
     }
@@ -144,10 +147,11 @@ public class Aggro : MonoBehaviour
     }
 
     private void recalculate_path() {
-        if (character.get_state() != CharacterState.ATTACKING || character.get_action() != CharacterAction.MOVING) {
+        if (character.get_state() != CharacterState.ATTACKING) {
             return;
         }
         if (((Vector2)cur_target.transform.position - last_enemy_pos).sqrMagnitude >= pos_diff_to_recalculate) {
+            Debug.Log("recalculate paaath");
             try_go_to_target();
             return;
         }
@@ -160,7 +164,7 @@ public class Aggro : MonoBehaviour
         }
         try_retarget();
         try_initiate_combat();
-        try_go_to_target();
+        // try_go_to_target();
         stop_at_target();
         recalculate_path();
     }
@@ -174,5 +178,8 @@ public class Aggro : MonoBehaviour
         if (cur_target == enemy_char) {
             cur_target = null;
         }
+        Debug.Log("size before remove: " + enemies_in_range.Count);
+        enemies_in_range.Remove(enemy_char);
+        Debug.Log("size after remove: " + enemies_in_range.Count);
     }
 }

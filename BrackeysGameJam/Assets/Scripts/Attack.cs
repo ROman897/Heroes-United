@@ -115,8 +115,8 @@ public abstract class Attack : MonoBehaviour
             return;
         }
 
-        cancel_attack_if_no_enemies();
-        try_initiate_attacking();
+        // cancel_attack_if_no_enemies();
+        // try_initiate_attacking();
         try_attack();
 
     }

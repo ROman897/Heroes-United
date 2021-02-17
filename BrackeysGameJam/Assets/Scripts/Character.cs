@@ -154,7 +154,7 @@ public class Character : MonoBehaviour
             }
         }
         animator.SetFloat("x_dir", rb.velocity.x);
-        animator.SetFloat("y_dir", rb.velocity.y);
+        animator.SetFloat("y_dir", rb.velocity.y * 0.1f);
     }
 
     private void handle_body_disappear() {
