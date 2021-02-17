@@ -157,6 +157,7 @@ GameObject:
   - component: {fileID: 3069518259731915664}
   - component: {fileID: 1584103213}
   - component: {fileID: 6095173973740528553}
+  - component: {fileID: -1421511168479261281}
   m_Layer: 0
   m_Name: PlayerCharacterArcher
   m_TagString: Hero
@@ -316,7 +317,28 @@ MonoBehaviour:
   dead_body_prefab: {fileID: 0}
   body_disappear_time: 7
   delete_after_die: 1
-  movement_speed: 0
+  movement_speed: 1
+--- !u!50 &-1421511168479261281
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536719533023009273}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2536719533561552557
 GameObject:
   m_ObjectHideFlags: 0

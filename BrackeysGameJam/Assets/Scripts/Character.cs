@@ -3,8 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum CharacterState {
+    IDLE,
+    MOVING,
+    ATTACKING
+}
+
 public class Character : MonoBehaviour
 {
+    private CharacterState character_state = CharacterState.IDLE;
+    private List<Vector2> cur_path;
+    private int next_path_point_index;
+    private Vector2 next_path_point;
+
     [SerializeField]
     private float max_hp;
 
@@ -33,12 +44,38 @@ public class Character : MonoBehaviour
     [SerializeField]
     private float movement_speed;
 
+    const float movement_epsilon = 0.05f;
+
+    public CharacterState get_state() {
+        return character_state;
+    }
+
+    private void move_along_path(int index) {
+        next_path_point_index = index;
+        next_path_point = cur_path[next_path_point_index]; 
+        rb.velocity = (next_path_point - (Vector2)transform.position).normalized * movement_speed;
+    }
+
     public void move_to(Vector2 pos) {
-        Debug.Log("move to targeet");
-        rb.velocity = (pos - (Vector2)transform.position).normalized * movement_speed;
+        cur_path = PathFinding.singleton().find_path(transform.position, pos);
+        Debug.Log("paath from: " + transform.position + "to: " + pos);
+        for (int i = cur_path.Count - 1; i >= 0; --i) {
+            Debug.Log(cur_path[i]);
+        }
+        Debug.Log("-------------------------------------");
+        if (cur_path == null || cur_path.Count == 0) {
+            return;
+        }
+        animator.SetBool("moving", true);
+        character_state = CharacterState.MOVING;
+        move_along_path(cur_path.Count - 1);
     }
 
     public void stop_movement() {
+        if (character_state == CharacterState.MOVING) {
+            animator.SetBool("moving", false);
+            character_state = CharacterState.IDLE;
+        }
         rb.velocity = Vector2.zero;
     }
 
@@ -78,12 +115,26 @@ public class Character : MonoBehaviour
     }
 
     public Vector2 get_expected_pos_at(float time) {
-        return transform.position;
-        // return (Vector2)transform.position + rb.velocity * time;
+        return (Vector2)transform.position + rb.velocity * time;
     }
 
-    void Update()
-    {
+    private void handle_movement() {
+        if (character_state != CharacterState.MOVING) {
+            return;
+        }
+        if (((Vector2)transform.position - next_path_point).sqrMagnitude < movement_epsilon) {
+            if (next_path_point_index > 0) {
+                move_along_path(next_path_point_index - 1);
+            } else {
+                stop_movement();
+                return;
+            }
+        }
+        animator.SetFloat("x_dir", rb.velocity.x);
+        animator.SetFloat("y_dir", rb.velocity.y);
+    }
+
+    private void handle_body_disappear() {
         if (!alive && death_timer < body_disappear_time) {
             death_timer += Time.deltaTime;
             if (death_timer >= body_disappear_time) {
@@ -94,5 +145,11 @@ public class Character : MonoBehaviour
                 }
             }
         }
+    }
+
+    void Update()
+    {
+        handle_movement();
+        handle_body_disappear();
     }
 }

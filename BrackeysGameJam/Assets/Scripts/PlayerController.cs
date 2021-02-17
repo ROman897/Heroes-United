@@ -4,90 +4,92 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private float movement_speed;
-    [SerializeField]
-    private float rotation_speed;
-    [SerializeField]
-    private bool FollowsMousePos;
-    [SerializeField]
-    private bool Q_and_E_to_rotate;
-    private Vector3 centerPoint;
-    private Rigidbody2D rb;
-    public static Vector2 global_movement_dir = Vector2.zero;
-    private GameObject[] children;
-    private GameObject[] childs;
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
+    class ControlledCharacter {
+        public PlayerCharacterController player_character;
+        public Vector2 offset_from_center;
     }
 
-    void Start()
-    {
-        StartCoroutine(PlacecenterPoint());
-    }
-    IEnumerator PlacecenterPoint()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.3f);
-            children = GameObject.FindGameObjectsWithTag("Hero"); //get all children
-            centerPoint = GetCenterPoint();
+    [SerializeField]
+    private float rotation_speed;
+
+    [SerializeField]
+    private bool FollowsMousePos;
+
+    [SerializeField]
+    private bool Q_and_E_to_rotate;
+
+    private Vector2 centerPoint;
+
+    private List<ControlledCharacter> controlled_characters = new List<ControlledCharacter>();
+
+    void Awake() {
+        GameObject[] heroes = GameObject.FindGameObjectsWithTag("Hero");
+        Vector2 center = GetCenterPoint(heroes);
+
+        foreach (GameObject hero_go in heroes) {
+            ControlledCharacter controlled_character = new ControlledCharacter();
+            controlled_character.player_character = hero_go.GetComponent<PlayerCharacterController>();
+            controlled_character.offset_from_center = (Vector2)hero_go.transform.position - center;
+            controlled_characters.Add(controlled_character);
         }
     }
-    Vector3 GetCenterPoint()
+
+    Vector2 GetCenterPoint(GameObject[] points)
     {
-    if (children.Length == 1)
-    {
-        return children[0].transform.position;
-        }
-        var bounds = new Bounds(children[0].transform.position, Vector3.zero);
-        for (int i = 0; i < children.Length; i++)
+        if (points.Length == 1)
         {
-            bounds.Encapsulate(children[i].transform.position);
+            return points[0].transform.position;
+        }
+        var bounds = new Bounds(points[0].transform.position, Vector3.zero);
+        for (int i = 0; i < points.Length; i++)
+        {
+            bounds.Encapsulate(points[i].transform.position);
         }
         return bounds.center; //returns the center point of the GamObject Array
     }
+
     void Update()
     {
-        if (FollowsMousePos && Input.GetMouseButton(0)) faceTowardsMouse();
-        if (Q_and_E_to_rotate) Rotation();
-        float y_movement = 0;
-        if (Input.GetKey("w"))
-        {
-            y_movement = 1;
-        }
-        else
-        {
-            if (Input.GetKey("s"))
-            {
-                y_movement = -1;
+        // if (FollowsMousePos && Input.GetMouseButton(0)) faceTowardsMouse();
+        // if (Q_and_E_to_rotate) Rotation();
+        // float y_movement = 0;
+        // if (Input.GetKey("w"))
+        // {
+        //     y_movement = 1;
+        // }
+        // else
+        // {
+        //     if (Input.GetKey("s"))
+        //     {
+        //         y_movement = -1;
+        //     }
+        // }
+        //
+        // float x_movement = 0;
+        // if (Input.GetKey("d"))
+        // {
+        //     x_movement = 1;
+        //
+        // }
+        // else
+        // {
+        //     if (Input.GetKey("a"))
+        //     {
+        //         x_movement = -1;
+        //     }
+        // }
+
+        if (Input.GetMouseButtonUp(1)) {
+            Vector2 target_pos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            int size = 0;
+            foreach (ControlledCharacter controlled_character in controlled_characters) {
+                if (controlled_character == null) {
+                    continue;
+                }
+                ++size;
+                controlled_character.player_character.move_command(target_pos + controlled_character.offset_from_center);
             }
         }
-
-        float x_movement = 0;
-        if (Input.GetKey("d"))
-        {
-            x_movement = 1;
-
-        }
-        else
-        {
-            if (Input.GetKey("a"))
-            {
-                x_movement = -1;
-            }
-        }
-
-        Vector2 movement = new Vector2(x_movement, y_movement);
-        if (movement != Vector2.zero)
-        {
-            movement = movement.normalized * movement_speed;
-        }
-        rb.velocity = movement;
-        global_movement_dir = movement;
-
-
     }
         void faceTowardsMouse()
         {
@@ -96,39 +98,25 @@ public class PlayerController : MonoBehaviour
             Vector2 dir = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
             transform.up = dir;
         }
-        void Rotation()
-        {
-            if (Input.GetKey("q"))
-            {
-                foreach (var item in children)
-                {
-                    item.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), rotation_speed * Time.deltaTime);
-                }
-                //transform.GetChild(0).gameObject.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), rotation_speed * Time.deltaTime);          //(new Vector3(0, 0, rotation_speed) * Time.deltaTime);
-            }
 
-            if (Input.GetKey("e"))
-            {
-                foreach (var item in children)
-                {
-                    item.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), -rotation_speed * Time.deltaTime);
-                }
-                //transform.GetChild(0).gameObject.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), -rotation_speed * Time.deltaTime);
-            }
-        }
-
-
-
-
-        //Should Actually get the children but somehow doesnt work :/
-
-        // GameObject[] GetChildren(GameObject parent)
+        // void Rotation()
         // {
-        //     for (int i = 0; i < parent.transform.childCount; ++i)
+        //     if (Input.GetKey("q"))
         //     {
-        //         childs[i] = parent.transform.GetChild(i).gameObject;
+        //         foreach (var item in children)
+        //         {
+        //             item.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), rotation_speed * Time.deltaTime);
+        //         }
+        //         //transform.GetChild(0).gameObject.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), rotation_speed * Time.deltaTime);          //(new Vector3(0, 0, rotation_speed) * Time.deltaTime);
         //     }
-        //     return childs;
+        //
+        //     if (Input.GetKey("e"))
+        //     {
+        //         foreach (var item in children)
+        //         {
+        //             item.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), -rotation_speed * Time.deltaTime);
+        //         }
+        //         //transform.GetChild(0).gameObject.transform.RotateAround(centerPoint, new Vector3(0f, 0f, 1f), -rotation_speed * Time.deltaTime);
+        //     }
         // }
-    
 }
