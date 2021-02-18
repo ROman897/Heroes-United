@@ -66,6 +66,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attack_distance: 0.4
+  debug_target_pos: {x: 0, y: 0}
+  debug_target_coords: {x: 0, y: 0}
+  is_ranged: 0
 --- !u!58 &6895613212642389634
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -89,6 +92,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 25668405, guid: 4fd94b8e4e030dfc09a06b80873572bc, type: 3}
+      propertyPath: m_Name
+      value: unused
+      objectReference: {fileID: 0}
     - target: {fileID: 25668405, guid: 4fd94b8e4e030dfc09a06b80873572bc, type: 3}
       propertyPath: m_IsActive
       value: 0

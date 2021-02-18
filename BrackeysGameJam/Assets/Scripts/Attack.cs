@@ -12,9 +12,7 @@ public abstract class Attack : MonoBehaviour
     [SerializeField]
     protected Effect attack_effect;
 
-    private HashSet<GameObject> enemies_in_range = new HashSet<GameObject>();
-
-    private GameObject cur_target;
+    private Aggro aggro;
 
     [SerializeField]
     private float attack_cooldown;
@@ -25,42 +23,14 @@ public abstract class Attack : MonoBehaviour
 
     private Character character;
 
-    public bool is_attacking() {
-        return enemies_in_range.Count > 0;
-    }
-
     protected void Awake() {
-        CollisionTrigger attack_trigger = transform.Find("AttackTrigger").GetComponent<CollisionTrigger>();
-        attack_trigger.on_trigger_enter.AddListener(add_enemy);
-        attack_trigger.on_trigger_exit.AddListener(remove_enemy);
         animator = GetComponent<Animator>();
         character = GetComponent<Character>();
-    }
-
-    private void add_enemy(GameObject enemy) {
-        enemies_in_range.Add(enemy);
-        pick_target();
-    }
-
-    private void remove_enemy(GameObject enemy) {
-        enemies_in_range.Remove(enemy);
-        pick_target();
-    }
-
-    private void pick_target() {
-        float min_dist = 0;
-        GameObject target = null;
-        foreach (GameObject possible_target in enemies_in_range) {
-            float dist = Vector2.Distance(transform.position, possible_target.transform.position);
-            if (dist < min_dist || target == null) {
-                min_dist = dist;
-                target = possible_target;
-            }
-        }
-        cur_target = target;
+        aggro = transform.Find("AggroRange").GetComponent<Aggro>();
     }
 
     private void attack() {
+        Character cur_target = aggro.get_cur_target();
         animator.SetFloat("x_attack", cur_target.transform.position.x - transform.position.x);
         animator.SetFloat("y_attack", cur_target.transform.position.y - transform.position.y);
 
@@ -70,27 +40,10 @@ public abstract class Attack : MonoBehaviour
         animator.SetTrigger("attack");
         cur_attack_cooldown = attack_cooldown;
 
-        instantiate_attack(cur_target);
+        instantiate_attack(aggro.get_cur_target());
     }
 
-    protected abstract void instantiate_attack(GameObject target);
-
-    private void cancel_attack_if_no_enemies() {
-        if (character.get_state() != CharacterState.ATTACKING) {
-            return;
-        }
-        if (cur_target == null) {
-            character.set_state(CharacterState.IDLE);
-        }
-    }
-
-    private void try_initiate_attacking() {
-        if (character.get_state() != CharacterState.IDLE || cur_target == null) {
-            return;
-        }
-        Debug.Log("initiate attaaaack");
-        character.set_state(CharacterState.ATTACKING);
-    }
+    protected abstract void instantiate_attack(Character target);
 
     private void try_attack() {
         if (cur_attack_cooldown > 0.0f) {
@@ -105,7 +58,7 @@ public abstract class Attack : MonoBehaviour
             return;
         }
 
-        if (cur_target != null) {
+        if (aggro.get_cur_target() != null) {
             attack();
         }
     }
@@ -115,8 +68,6 @@ public abstract class Attack : MonoBehaviour
             return;
         }
 
-        // cancel_attack_if_no_enemies();
-        // try_initiate_attacking();
         try_attack();
 
     }

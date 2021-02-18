@@ -9,6 +9,8 @@ public class MeeleAttack : Attack
     private AttackAoE aoe_left;
     private AttackAoE aoe_right;
 
+    private Aggro aggro;
+
     void Awake() {
         base.Awake();
         aoe_up = transform.Find("AttackAoEUp").GetComponent<AttackAoE>();
@@ -17,22 +19,10 @@ public class MeeleAttack : Attack
         aoe_right = transform.Find("AttackAoERight").GetComponent<AttackAoE>();
     }
 
-    protected override void instantiate_attack(GameObject target) {
+    protected override void instantiate_attack(Character target) {
         float x_dif = target.transform.position.x - transform.position.x;
         float y_dif = target.transform.position.y - transform.position.y;
 
-        if (Mathf.Abs(x_dif) > Mathf.Abs(y_dif)) {
-            if (x_dif > 0) {
-                aoe_right.trigger(attack_effect);
-            } else {
-                aoe_left.trigger(attack_effect);
-            }
-        } else {
-            if (y_dif > 0) {
-                aoe_up.trigger(attack_effect);
-            } else {
-                aoe_down.trigger(attack_effect);
-            }
-        }
+        target.apply_effect(attack_effect);
     }
 }

@@ -19,6 +19,16 @@ public class Aggro : MonoBehaviour
     private Vector2 last_enemy_pos;
     private const float pos_diff_to_recalculate = 0.6f;
 
+    public Vector2 debug_target_pos;
+    public Vector2Int debug_target_coords;
+
+    [SerializeField]
+    private bool is_ranged;
+
+    public Character get_cur_target() {
+        return cur_target;
+    }
+
     void Awake() {
         character = transform.parent.GetComponent<Character>();
         sqr_attack_distance = attack_distance * attack_distance;
@@ -134,6 +144,8 @@ public class Aggro : MonoBehaviour
         Vector2 chosen_pos = least_populated_tiles[Random.Range(0, least_populated_tiles.Count)];
         last_enemy_pos = cur_target.transform.position;
         character.move_to(chosen_pos);
+        debug_target_pos = chosen_pos;
+        debug_target_coords = World.singleton().world_to_coord(chosen_pos); 
     }
 
     private void stop_at_target() {

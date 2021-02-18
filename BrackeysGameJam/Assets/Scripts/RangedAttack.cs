@@ -20,10 +20,9 @@ public class RangedAttack : Attack
         spawn_point_right = transform.Find("ProjectileSpawnRight");
     }
 
-    protected override void instantiate_attack(GameObject target) {
-        Transform target_char = target.transform.parent;
-        float x_dif = target_char.position.x - transform.position.x;
-        float y_dif = target_char.position.y - transform.position.y;
+    protected override void instantiate_attack(Character target) {
+        float x_dif = target.transform.position.x - transform.position.x;
+        float y_dif = target.transform.position.y - transform.position.y;
 
         Transform spawn_point;
 
@@ -46,7 +45,7 @@ public class RangedAttack : Attack
         } else {
             projectile.layer = LayerMask.NameToLayer("EnemyAttackRange");
         }
-        projectile.GetComponent<Projectile>().set_target(target_char.gameObject);
+        projectile.GetComponent<Projectile>().set_target(target.gameObject);
     }
 
 }
