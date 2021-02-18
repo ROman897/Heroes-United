@@ -5,6 +5,10 @@ using UnityEngine.Tilemaps;
 
 public class World : MonoBehaviour
 {
+    [SerializeField]
+    private float preferred_unit_distance;
+    private float preferred_unit_distance_sqr = 0.0f;
+
     private static World instance;
 
     private HashSet<Vector2Int> passable_tiles = new HashSet<Vector2Int>();
@@ -64,13 +68,28 @@ public class World : MonoBehaviour
         active_movements.Remove(character);
     }
 
-    public int get_population_on_tile(Vector2 position) {
+    public int get_population_near_pos(Vector2 position, Character source_character) {
         Vector2Int tile_coords = world_to_coord(position);
-        List<Character> characters_on_tile;
-        if (characters.TryGetValue(tile_coords, out characters_on_tile)) {
-            return characters_on_tile.Count;
+
+        int count = 0;
+
+        for (int x_inc = -1; x_inc <= 1; ++x_inc) {
+            for (int y_inc = -1; y_inc <= 1; ++y_inc) {
+                Vector2Int nearby_tile_coords = new Vector2Int(tile_coords.x + x_inc, tile_coords.y + y_inc);
+                List<Character> characters_on_tile;
+                if (characters.TryGetValue(tile_coords, out characters_on_tile)) {
+                    foreach (Character character in characters_on_tile) {
+                        if (source_character == character) {
+                            continue;
+                        }
+                        if (((Vector2)character.transform.position - position).sqrMagnitude <= preferred_unit_distance_sqr) {
+                            ++count;
+                        }
+                    }
+                }
+            }
         }
-        return 0;
+        return count;
     }
 
     void Awake() {
@@ -80,6 +99,7 @@ public class World : MonoBehaviour
                 passable_tiles.Add(new Vector2Int(x, y));
             }
         }
+        preferred_unit_distance_sqr = preferred_unit_distance * preferred_unit_distance;
     }
 
     public Vector2 coord_to_world(Vector2Int tile_coords) {

@@ -17,7 +17,7 @@ public class Aggro : MonoBehaviour
     private const float meele_position_randomization = 0.1f;
 
     private Vector2 last_enemy_pos;
-    private const float pos_diff_to_recalculate = 0.2f;
+    private const float pos_diff_to_recalculate = 0.1f;
 
     public Vector2 debug_target_pos;
     public Vector2Int debug_target_coords;
@@ -32,6 +32,10 @@ public class Aggro : MonoBehaviour
     void Awake() {
         character = transform.parent.GetComponent<Character>();
         sqr_attack_distance = attack_distance * attack_distance;
+    }
+
+    public bool can_attack() {
+        return cur_target != null && ((Vector2)cur_target.transform.position - (Vector2)transform.position).sqrMagnitude <= sqr_attack_distance;
     }
 
     private void try_retarget() {
@@ -61,11 +65,21 @@ public class Aggro : MonoBehaviour
         float[] weights = new float[enemies_in_range.Count];
         float total_weight = 0.0f;
         int index = 0;
+        List<Character> characters_in_direct_range = new List<Character>();
+
         foreach (Character enemy_char in enemies_in_range) {
+            float distance = Vector2.Distance(character.transform.position, enemy_char.transform.position);
+            if (distance <= attack_distance) {
+                characters_in_direct_range.Add(enemy_char);
+            }
             weights[index] = 1.0f / Vector2.Distance(character.transform.position, enemy_char.transform.position);  
             total_weight += weights[index];
             enemy_chars[index] = enemy_char;
             ++index;
+        }
+        if (characters_in_direct_range.Count > 0) {
+            cur_target = characters_in_direct_range[Random.Range(0, characters_in_direct_range.Count - 1)];
+            return;
         }
         float[] probs = new float[enemies_in_range.Count];
         for (int i = 0; i < enemies_in_range.Count; ++i) {
@@ -84,7 +98,6 @@ public class Aggro : MonoBehaviour
     }
 
     private void try_initiate_combat() {
-        // Debug.Log(character.get_state());
         if (character.get_state() != CharacterState.IDLE) {
             // if the character is already doing something else, return
             return;
@@ -105,9 +118,9 @@ public class Aggro : MonoBehaviour
         if (character.get_state() != CharacterState.ATTACKING) {
             return;
         }
-        if (((Vector2)cur_target.transform.position - (Vector2)character.transform.position).sqrMagnitude <= sqr_attack_distance) {
-            return;
-        }
+        // if (((Vector2)cur_target.transform.position - (Vector2)character.transform.position).sqrMagnitude <= sqr_attack_distance) {
+        //     return;
+        // }
 
         List<Vector2> least_populated_tiles = new List<Vector2>();
         int lowest_population = 0;
@@ -125,7 +138,7 @@ public class Aggro : MonoBehaviour
                     continue;
                 }
 
-                int population_on_tile = World.singleton().get_population_on_tile(new_pos);
+                int population_on_tile = World.singleton().get_population_near_pos(new_pos, character);
                 if (population_on_tile < lowest_population || least_populated_tiles.Count == 0) {
                     lowest_population = population_on_tile; 
                     least_populated_tiles.Clear();
@@ -136,9 +149,11 @@ public class Aggro : MonoBehaviour
             }
         }
         if (least_populated_tiles.Count == 0) {
+            Debug.Log("not tiles available");
             return;
         }
         if (lowest_population > 1) {
+            Debug.Log("lowest population 1");
             return;
         }
         Vector2 chosen_pos = least_populated_tiles[Random.Range(0, least_populated_tiles.Count)];
@@ -152,10 +167,14 @@ public class Aggro : MonoBehaviour
         if (character.get_state() != CharacterState.ATTACKING || character.get_action() != CharacterAction.MOVING) {
             return;
         }
-        if (((Vector2)cur_target.transform.position - (Vector2)character.transform.position).sqrMagnitude <= sqr_attack_distance) {
-            character.stop_movement();
+        if (((Vector2)cur_target.transform.position - (Vector2)character.transform.position).sqrMagnitude > sqr_attack_distance) {
             return;
         }
+        if (World.singleton().get_population_near_pos(transform.position, character) > 0) {
+            return;
+        }
+
+        character.stop_movement();
     }
 
     private void recalculate_path() {
@@ -174,10 +193,10 @@ public class Aggro : MonoBehaviour
         if (!character.is_alive()) {
             return;
         }
-        try_retarget();
         try_initiate_combat();
+        try_retarget();
         // try_go_to_target();
-        // stop_at_target();
+        stop_at_target();
         recalculate_path();
     }
 

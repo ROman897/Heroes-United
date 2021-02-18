@@ -12,7 +12,7 @@ public abstract class Attack : MonoBehaviour
     [SerializeField]
     protected Effect attack_effect;
 
-    private Aggro aggro;
+    protected Aggro aggro;
 
     [SerializeField]
     private float attack_cooldown;
@@ -58,7 +58,7 @@ public abstract class Attack : MonoBehaviour
             return;
         }
 
-        if (aggro.get_cur_target() != null) {
+        if (aggro.can_attack()) {
             attack();
         }
     }

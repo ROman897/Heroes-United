@@ -9,8 +9,6 @@ public class MeeleAttack : Attack
     private AttackAoE aoe_left;
     private AttackAoE aoe_right;
 
-    private Aggro aggro;
-
     void Awake() {
         base.Awake();
         aoe_up = transform.Find("AttackAoEUp").GetComponent<AttackAoE>();
