@@ -10450,7 +10450,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e74cc518038be2bfb51e79f42fcefb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  preferred_unit_distance: 0
+  preferred_unit_distance: 0.3
+  debug_tiles: []
 --- !u!4 &1726776072
 Transform:
   m_ObjectHideFlags: 0

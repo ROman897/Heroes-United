@@ -145,12 +145,14 @@ public class World : MonoBehaviour
     }
 
     public bool is_tile_passable(Vector2Int tile_coords) {
-        return true;
-        return passable_tiles.Contains(tile_coords);
+        MyTile tile = floor_tilemap.GetTile((Vector3Int)tile_coords) as MyTile;
+        if (tile == null) {
+            return false;
+        }
+        return tile.passable;
     }
 
     public bool is_pos_passable(Vector2 world_pos) {
-        return true;
         Vector2Int tile_coords = (Vector2Int)floor_tilemap.WorldToCell(world_pos);
         return is_tile_passable(tile_coords);
     }
