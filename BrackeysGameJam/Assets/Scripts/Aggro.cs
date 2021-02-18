@@ -96,7 +96,7 @@ public class Aggro : MonoBehaviour
     }
 
     private void try_initiate_combat() {
-        if (character.get_state() != CharacterState.IDLE) {
+        if (character.get_state() != CharacterState.IDLE && character.get_state() != CharacterState.COMMAND_MOVE) {
             // if the character is already doing something else, return
             return;
         }

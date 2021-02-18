@@ -17,6 +17,9 @@ public class PlayerCharacterController : MonoBehaviour
         if (!character.is_alive()) {
             return;
         }
+        if (character.get_state() == CharacterState.ATTACKING) {
+            return;
+        }
         character.set_state(CharacterState.COMMAND_MOVE);
         character.move_to(world_pos);
     }
