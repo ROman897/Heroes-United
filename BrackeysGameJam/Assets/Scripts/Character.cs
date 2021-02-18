@@ -50,7 +50,7 @@ public class Character : MonoBehaviour
     [SerializeField]
     private float movement_speed;
 
-    const float movement_epsilon = 0.05f;
+    const float movement_epsilon = 0.0001f;
 
     public CharacterState get_state() {
         return character_state;
@@ -75,19 +75,22 @@ public class Character : MonoBehaviour
     }
 
     public void move_to(Vector2 pos) {
+        stop_movement();
         cur_path = PathFinding.singleton().find_path(transform.position, pos);
-        for (int i = cur_path.Count - 1; i >= 0; --i) {
-        }
         if (cur_path == null || cur_path.Count == 0) {
             return;
         }
 
-        stop_movement();
         World.singleton().character_started_moving(transform.position, pos, this);
+
+        for (int i = cur_path.Count - 1; i >= 0; --i) {
+            Debug.Log(i + "th position: " + cur_path[i].x + " , " + cur_path[i].y);
+        }
 
         animator.SetBool("moving", true);
         character_action = CharacterAction.MOVING;
         move_along_path(cur_path.Count - 1);
+        Debug.Log("moving to " + pos.x + " " + pos.y);
     }
 
     public void stop_movement() {
@@ -131,6 +134,7 @@ public class Character : MonoBehaviour
         stop_movement();
         animator.SetTrigger("die");
         World.singleton().remove_character(transform.position, this);
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 
     private void refresh_health_bar() {
@@ -149,6 +153,8 @@ public class Character : MonoBehaviour
             if (next_path_point_index > 0) {
                 move_along_path(next_path_point_index - 1);
             } else {
+                Debug.Log("reached end of movement at pos: " + transform.position.x + " , " + transform.position.y);
+                Debug.Log("last pos was: " + next_path_point.x + " , " + next_path_point.y);
                 stop_movement();
                 return;
             }

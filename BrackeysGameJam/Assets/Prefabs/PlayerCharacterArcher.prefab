@@ -129,7 +129,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 3.5
+  m_Radius: 3
 --- !u!114 &4891850742598814055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_hp: 4
   rb: {fileID: 0}
-  body_disappear_time: 7
+  body_disappear_time: 3
   delete_after_die: 1
   movement_speed: 1
 --- !u!50 &-1421511168479261281
