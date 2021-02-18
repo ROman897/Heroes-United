@@ -314,7 +314,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_hp: 4
   rb: {fileID: 0}
-  dead_body_prefab: {fileID: 0}
   body_disappear_time: 7
   delete_after_die: 1
   movement_speed: 1
@@ -622,6 +621,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287313378616, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287313378616, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287313378616, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287313378616, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -14
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287717906046, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287717906046, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287717906046, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 180246287717906046, guid: 6a213f23e60e0b3718b37fc284fe8881,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a213f23e60e0b3718b37fc284fe8881, type: 3}

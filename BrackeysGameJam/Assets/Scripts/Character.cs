@@ -170,9 +170,14 @@ public class Character : MonoBehaviour
         }
     }
 
+    private void set_z_pos() {
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+    }
+
     void Update()
     {
         handle_movement();
         handle_body_disappear();
+        set_z_pos();
     }
 }
