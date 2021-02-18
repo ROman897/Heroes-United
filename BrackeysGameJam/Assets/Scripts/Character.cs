@@ -17,10 +17,8 @@ public enum CharacterAction {
 
 public class Character : MonoBehaviour
 {
-    public const float meele_range = 0.4f;
-
-    private CharacterState character_state = CharacterState.IDLE;
-    private CharacterAction character_action = CharacterAction.IDLE;
+    public CharacterState character_state = CharacterState.IDLE;
+    public CharacterAction character_action = CharacterAction.IDLE;
 
     private List<Vector2> cur_path;
     private int next_path_point_index;
@@ -51,6 +49,8 @@ public class Character : MonoBehaviour
     private float movement_speed;
 
     const float movement_epsilon = 0.0001f;
+
+    public Vector2Int debug_current_tile_coords;
 
     public CharacterState get_state() {
         return character_state;
@@ -83,14 +83,9 @@ public class Character : MonoBehaviour
 
         World.singleton().character_started_moving(transform.position, pos, this);
 
-        for (int i = cur_path.Count - 1; i >= 0; --i) {
-            Debug.Log(i + "th position: " + cur_path[i].x + " , " + cur_path[i].y);
-        }
-
         animator.SetBool("moving", true);
         character_action = CharacterAction.MOVING;
         move_along_path(cur_path.Count - 1);
-        Debug.Log("moving to " + pos.x + " " + pos.y);
     }
 
     public void stop_movement() {
@@ -153,9 +148,8 @@ public class Character : MonoBehaviour
             if (next_path_point_index > 0) {
                 move_along_path(next_path_point_index - 1);
             } else {
-                Debug.Log("reached end of movement at pos: " + transform.position.x + " , " + transform.position.y);
-                Debug.Log("last pos was: " + next_path_point.x + " , " + next_path_point.y);
                 stop_movement();
+                Debug.Log(gameObject.name + "at: " + (Vector2)transform.position + "  arrived at destination: " + next_path_point);
                 return;
             }
         }
@@ -185,5 +179,6 @@ public class Character : MonoBehaviour
         handle_movement();
         handle_body_disappear();
         set_z_pos();
+        debug_current_tile_coords = World.singleton().world_to_coord(transform.position);
     }
 }

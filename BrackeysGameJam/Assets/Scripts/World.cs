@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[System.Serializable]
+public class TileDebugInfo {
+    public Vector2Int tile_coords;
+    public Character[] characters;
+}
+
 public class World : MonoBehaviour
 {
+    public const float meele_range = 0.4f;
+    public const float sqr_meele_range = meele_range * meele_range;
+
     [SerializeField]
     private float preferred_unit_distance;
     private float preferred_unit_distance_sqr = 0.0f;
@@ -14,7 +23,9 @@ public class World : MonoBehaviour
     private HashSet<Vector2Int> passable_tiles = new HashSet<Vector2Int>();
 
     private Dictionary<Vector2Int, List<Character>> characters = new Dictionary<Vector2Int, List<Character>>();
-    private Dictionary<Character, Vector2Int> active_movements = new Dictionary<Character, Vector2Int>();
+    private Dictionary<Character, Vector2> active_movements = new Dictionary<Character, Vector2>();
+
+    public TileDebugInfo[] debug_tiles;
 
     private Tilemap floor_tilemap;
 
@@ -54,18 +65,26 @@ public class World : MonoBehaviour
         remove_character(old_pos, character);
         add_character(new_pos, character);
         Vector2Int new_tile_coords = world_to_coord(new_pos);
-        active_movements[character] = new_tile_coords;
+        active_movements[character] = new_pos;
     }
 
     public void character_stopped(Vector2 new_pos, Character character) {
-        Vector2Int old_dest_coords = active_movements[character];
+        Vector2Int old_dest_coords = world_to_coord(active_movements[character]);
         Vector2Int new_tile_coords = world_to_coord(new_pos);
+        active_movements.Remove(character);
         if (old_dest_coords == new_tile_coords) {
             return;
         }
         _remove_character(old_dest_coords, character);
         _add_character(new_tile_coords, character);
-        active_movements.Remove(character);
+    }
+
+    private Vector2 get_future_char_pos(Character character) {
+        Vector2 future_pos;
+        if (!active_movements.TryGetValue(character, out future_pos)) {
+            future_pos = character.transform.position;
+        }
+        return future_pos;
     }
 
     public int get_population_near_pos(Vector2 position, Character source_character) {
@@ -77,12 +96,12 @@ public class World : MonoBehaviour
             for (int y_inc = -1; y_inc <= 1; ++y_inc) {
                 Vector2Int nearby_tile_coords = new Vector2Int(tile_coords.x + x_inc, tile_coords.y + y_inc);
                 List<Character> characters_on_tile;
-                if (characters.TryGetValue(tile_coords, out characters_on_tile)) {
+                if (characters.TryGetValue(nearby_tile_coords, out characters_on_tile)) {
                     foreach (Character character in characters_on_tile) {
                         if (source_character == character) {
                             continue;
                         }
-                        if (((Vector2)character.transform.position - position).sqrMagnitude <= preferred_unit_distance_sqr) {
+                        if ((get_future_char_pos(character) - position).sqrMagnitude <= preferred_unit_distance_sqr) {
                             ++count;
                         }
                     }
@@ -90,6 +109,20 @@ public class World : MonoBehaviour
             }
         }
         return count;
+    }
+
+    void Update() {
+        debug_tiles = new TileDebugInfo[characters.Count];
+        int index = 0;
+        foreach (var entry in characters) {
+            debug_tiles[index] = new TileDebugInfo();
+            debug_tiles[index].tile_coords = entry.Key;
+            debug_tiles[index].characters = new Character[entry.Value.Count]; 
+            for (int i = 0; i < entry.Value.Count; ++i) {
+                debug_tiles[index].characters[i] = entry.Value[i];
+            }
+            ++index;
+        }
     }
 
     void Awake() {
