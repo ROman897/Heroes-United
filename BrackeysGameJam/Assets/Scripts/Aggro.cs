@@ -17,7 +17,7 @@ public class Aggro : MonoBehaviour
     private const float meele_position_randomization = 0.1f;
 
     private Vector2 last_enemy_pos;
-    private const float pos_diff_to_recalculate = 0.6f;
+    private const float pos_diff_to_recalculate = 0.2f;
 
     public Vector2 debug_target_pos;
     public Vector2Int debug_target_coords;
@@ -177,7 +177,7 @@ public class Aggro : MonoBehaviour
         try_retarget();
         try_initiate_combat();
         // try_go_to_target();
-        stop_at_target();
+        // stop_at_target();
         recalculate_path();
     }
 
