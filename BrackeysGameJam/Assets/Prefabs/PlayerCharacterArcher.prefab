@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8371192409513175001}
   - component: {fileID: 1975774068943350103}
-  - component: {fileID: 4891850742598814055}
+  - component: {fileID: 3155443516638889848}
   m_Layer: 10
   m_Name: AggroRange
   m_TagString: Untagged
@@ -129,8 +129,8 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 3
---- !u!114 &4891850742598814055
+  m_Radius: 3.5
+--- !u!114 &3155443516638889848
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,10 +142,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e776475396f3449b8d860124d65871e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack_distance: 3
+  cur_target: {fileID: 0}
   debug_target_pos: {x: 0, y: 0}
   debug_target_coords: {x: 0, y: 0}
-  is_ranged: 0
+  attack_range: 3
+  debug: 0
 --- !u!1 &2536719533023009273
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,11 +317,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c3d9d7d74e72a718b6429965125be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character_state: 0
+  character_action: 0
   max_hp: 4
   rb: {fileID: 0}
   body_disappear_time: 3
   delete_after_die: 1
   movement_speed: 1
+  debug_current_tile_coords: {x: 0, y: 0}
 --- !u!50 &-1421511168479261281
 Rigidbody2D:
   serializedVersion: 4

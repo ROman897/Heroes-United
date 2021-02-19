@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e776475396f3449b8d860124d65871e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack_distance: 0.4
+  cur_target: {fileID: 0}
   debug_target_pos: {x: 0, y: 0}
   debug_target_coords: {x: 0, y: 0}
-  is_ranged: 0
+  attack_range: 0.4
+  debug: 0
 --- !u!58 &1931977946
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -102,7 +103,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 25668406, guid: 4fd94b8e4e030dfc09a06b80873572bc, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 606999894622113887, guid: 4fd94b8e4e030dfc09a06b80873572bc,
         type: 3}

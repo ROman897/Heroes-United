@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e776475396f3449b8d860124d65871e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack_distance: 0.4
+  cur_target: {fileID: 0}
   debug_target_pos: {x: 0, y: 0}
   debug_target_coords: {x: 0, y: 0}
-  is_ranged: 0
+  attack_range: 0.4
+  debug: 0
 --- !u!58 &25668407
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -63,7 +64,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 3
 --- !u!1 &1997299069
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,11 +432,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c3d9d7d74e72a718b6429965125be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character_state: 0
+  character_action: 0
   max_hp: 4
   rb: {fileID: 0}
   body_disappear_time: 3
   delete_after_die: 1
   movement_speed: 1
+  debug_current_tile_coords: {x: 0, y: 0}
 --- !u!50 &1051271008794077050
 Rigidbody2D:
   serializedVersion: 4
