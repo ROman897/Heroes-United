@@ -23,6 +23,9 @@ public abstract class Attack : MonoBehaviour
 
     private Character character;
 
+    [SerializeField]
+    private AudioSource attack_sound;
+
     protected void Awake() {
         animator = GetComponent<Animator>();
         character = GetComponent<Character>();
@@ -39,6 +42,8 @@ public abstract class Attack : MonoBehaviour
 
         animator.SetTrigger("attack");
         cur_attack_cooldown = attack_cooldown;
+
+        attack_sound.Play(0);
 
         instantiate_attack(aggro.get_cur_target());
     }

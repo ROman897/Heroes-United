@@ -52,6 +52,9 @@ public class Character : MonoBehaviour
 
     public Vector2Int debug_current_tile_coords;
 
+    [SerializeField]
+    private AudioSource death_sound;
+
     public CharacterState get_state() {
         return character_state;
     }
@@ -130,6 +133,8 @@ public class Character : MonoBehaviour
         animator.SetTrigger("die");
         World.singleton().remove_character(transform.position, this);
         GetComponent<SpriteRenderer>().enabled = false;
+        death_sound.Play(0);
+        LevelManager.singleton().character_died(this);
     }
 
     private void refresh_health_bar() {
