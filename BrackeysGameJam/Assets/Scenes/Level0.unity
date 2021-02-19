@@ -248,8 +248,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_experience: 100
-  current_experience: 75
-  min_experience: 50
+  current_experience: 0
+  min_experience: 0
+  ToLVL1: 100
+  ExperiencePX: {fileID: 2234093606126417562, guid: f49c90347928f904ebb897d200d423da,
+    type: 3}
 --- !u!114 &47348549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,7 +439,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.5
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1999,7 +2002,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'XP : 75'
+  m_text: 'XP : 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
