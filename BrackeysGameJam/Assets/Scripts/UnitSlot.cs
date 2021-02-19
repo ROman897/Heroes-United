@@ -29,6 +29,11 @@ public class UnitSlot : MonoBehaviour
         if (!PlayerPrefs.HasKey("Unit" + UnitNumber))
             PlayerPrefs.SetString("Unit" + UnitNumber, "");
     }
+    private void OnDestroy()
+    {
+        if (!Application.isPlaying)
+            UnitUsed = 0;
+    }
 
     // Update is called once per frame
     void FixedUpdate()
