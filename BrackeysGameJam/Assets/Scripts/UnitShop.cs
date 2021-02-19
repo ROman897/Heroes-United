@@ -11,6 +11,10 @@ public class UnitShop : MonoBehaviour
     void Start()
     {
         PlayerPrefs.SetFloat("Money", 200);
+        
+    }
+    private void Awake()
+    {
         unitNumber = UnitSlot.UnitUsed;
     }
 
