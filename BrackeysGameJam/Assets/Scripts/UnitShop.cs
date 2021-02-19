@@ -13,15 +13,11 @@ public class UnitShop : MonoBehaviour
         PlayerPrefs.SetFloat("Money", 200);
         
     }
-    private void Awake()
-    {
-        unitNumber = UnitSlot.UnitUsed;
-    }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        unitNumber = UnitSlot.UnitUsed;
     }
     public void buyUnit()
     {
