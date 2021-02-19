@@ -19,7 +19,14 @@ public class Aggro : MonoBehaviour
     private const float epsilon = 0.05f;
 
     [SerializeField]
-    private bool is_ranged;
+    private float attack_range;
+
+    private float sqr_attack_range;
+
+    [SerializeField]
+    private bool debug = false;
+
+    private Grid grid;
 
     public Character get_cur_target() {
         return cur_target;
@@ -27,10 +34,14 @@ public class Aggro : MonoBehaviour
 
     void Awake() {
         character = transform.parent.GetComponent<Character>();
+        sqr_attack_range = attack_range * attack_range;
+        grid = GameObject.Find("Grid").GetComponent<Grid>();
     }
 
     public bool can_attack() {
-        return cur_target != null && ((Vector2)cur_target.transform.position - (Vector2)transform.position).sqrMagnitude <= World.sqr_meele_range;
+        return cur_target != null
+            && ((Vector2)cur_target.transform.position
+                - (Vector2)transform.position).sqrMagnitude <= sqr_attack_range;
     }
 
     private void try_retarget() {
@@ -44,10 +55,14 @@ public class Aggro : MonoBehaviour
         pick_new_target();
 
         if (cur_target == null) {
-            Debug.Log(transform.parent.gameObject.name + " cancelling combat no enemy found");
+            if (debug) {
+                Debug.Log(transform.parent.gameObject.name + " cancelling combat no enemy found");
+            }
             character.set_state(CharacterState.IDLE);
         } else {
-            Debug.Log(transform.parent.gameObject.name + " retargeting to: " + cur_target.gameObject.name);
+            if (debug) {
+                Debug.Log(transform.parent.gameObject.name + " retargeting to: " + cur_target.gameObject.name);
+            }
             try_go_to_target();
             stop_at_target();
         }
@@ -55,7 +70,9 @@ public class Aggro : MonoBehaviour
 
     private void pick_new_target() {
         if (enemies_in_range.Count == 0) {
-            Debug.Log(transform.parent.gameObject.name + " cannot pick new target, nobody nearby");
+            if (debug) {
+                Debug.Log(transform.parent.gameObject.name + " cannot pick new target, nobody nearby");
+            }
             return;
         }
         Character[] enemy_chars = new Character[enemies_in_range.Count];
@@ -66,8 +83,9 @@ public class Aggro : MonoBehaviour
         List<Character> characters_in_direct_range = new List<Character>();
 
         foreach (Character enemy_char in enemies_in_range) {
-            float sqr_distance = ((Vector2)character.transform.position - (Vector2)enemy_char.transform.position).sqrMagnitude;
-            if (sqr_distance <= World.sqr_meele_range) {
+            float sqr_distance = ((Vector2)character.transform.position
+                - (Vector2)enemy_char.transform.position).sqrMagnitude;
+            if (sqr_distance <= sqr_attack_range) {
                 characters_in_direct_range.Add(enemy_char);
             }
             weights[index] = 1.0f / sqr_distance;  
@@ -76,7 +94,8 @@ public class Aggro : MonoBehaviour
             ++index;
         }
         if (characters_in_direct_range.Count > 0) {
-            cur_target = characters_in_direct_range[Random.Range(0, characters_in_direct_range.Count - 1)];
+            cur_target = characters_in_direct_range[Random.Range(0,
+                characters_in_direct_range.Count - 1)];
             return;
         }
         float[] probs = new float[enemies_in_range.Count];
@@ -96,14 +115,15 @@ public class Aggro : MonoBehaviour
     }
 
     private void try_initiate_combat() {
-        if (character.get_state() != CharacterState.IDLE && character.get_state() != CharacterState.COMMAND_MOVE) {
+        if (character.get_state() != CharacterState.IDLE && character.get_state()
+            != CharacterState.COMMAND_MOVE)
+        {
             // if the character is already doing something else, return
             return;
         }
 
         pick_new_target();
         if (cur_target == null) {
-            // Debug.Log("cannot initiate combaat");
             return;
         }
 
@@ -119,14 +139,20 @@ public class Aggro : MonoBehaviour
 
         float min_sqr_dist = 1000.0f;
 
-        for (int x_inc = -1; x_inc <= 1; ++x_inc) {
-            for (int y_inc = -1; y_inc <= 1; ++y_inc) {
+        int max_inc = (int)Mathf.Ceil(attack_range / grid.cellSize.x);  
+
+        for (int x_inc = -max_inc; x_inc <= max_inc; ++x_inc) {
+            for (int y_inc = -max_inc; y_inc <= max_inc; ++y_inc) {
                 if (x_inc == 0 && y_inc == 0) {
                     continue;
                 }
 
                 Vector2 inc = new Vector2(x_inc, y_inc); 
-                inc = inc.normalized * 0.95f * World.meele_range;
+                inc = inc.normalized * 0.95f * attack_range;
+
+                if (inc.sqrMagnitude > sqr_attack_range) {
+                    continue;
+                }
 
                 Vector2 new_pos = (Vector2)cur_target.transform.position + inc; 
 
@@ -145,7 +171,9 @@ public class Aggro : MonoBehaviour
             }
         }
         if (free_tiles.Count == 0) {
-            Debug.Log("no tiles available");
+            if (debug) {
+                Debug.Log("no tiles available");
+            }
             return;
         }
 
@@ -161,7 +189,9 @@ public class Aggro : MonoBehaviour
         character.move_to(chosen_pos);
         debug_target_pos = chosen_pos;
         debug_target_coords = World.singleton().world_to_coord(chosen_pos); 
-        Debug.Log(transform.parent.gameObject.name + "moving to: " + chosen_pos);
+        if (debug) {
+            Debug.Log(transform.parent.gameObject.name + "moving to: " + chosen_pos);
+        }
     }
 
     private bool can_stop_at_pos(Vector2 pos) {
@@ -172,13 +202,17 @@ public class Aggro : MonoBehaviour
         if (character.get_state() != CharacterState.ATTACKING || character.get_action() != CharacterAction.MOVING) {
             return;
         }
-        if (((Vector2)cur_target.transform.position - (Vector2)character.transform.position).sqrMagnitude > World.sqr_meele_range) {
+        if (((Vector2)cur_target.transform.position
+            - (Vector2)character.transform.position).sqrMagnitude > sqr_attack_range) {
             return;
         }
         if (!can_stop_at_pos(transform.position)) {
             return;
         }
-        Debug.Log(transform.parent.gameObject.name + " stopping at: " + transform.position + "because I am in range for attack");
+        if (debug) {
+            Debug.Log(transform.parent.gameObject.name + " stopping at: "
+                    + transform.position + "because I am in range for attack");
+        }
         character.stop_movement();
     }
 
@@ -188,7 +222,7 @@ public class Aggro : MonoBehaviour
         }
 
         if (character.get_action() == CharacterAction.IDLE) {
-            if (((Vector2)cur_target.transform.position - (Vector2)transform.position).sqrMagnitude > 0.99f * World.sqr_meele_range) {
+            if (((Vector2)cur_target.transform.position - (Vector2)transform.position).sqrMagnitude > 0.99f * sqr_attack_range) {
                 try_go_to_target();
                 return;
             }
@@ -198,8 +232,9 @@ public class Aggro : MonoBehaviour
             return;
         }
 
-        // Debug.Log(transform.parent.gameObject.name + " recalculate distance: " + ((Vector2)cur_target.transform.position - last_enemy_pos).sqrMagnitude + "out of: " + 0.9f * World.sqr_meele_range);
-        if (((Vector2)cur_target.transform.position - last_enemy_pos).sqrMagnitude > 0.99f * World.sqr_meele_range) {
+        if (((Vector2)cur_target.transform.position - last_enemy_pos).sqrMagnitude
+            > 0.99f * sqr_attack_range)
+        {
             try_go_to_target();
             return;
         }

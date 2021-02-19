@@ -11,9 +11,6 @@ public class TileDebugInfo {
 
 public class World : MonoBehaviour
 {
-    public const float meele_range = 0.4f;
-    public const float sqr_meele_range = meele_range * meele_range;
-
     [SerializeField]
     private float preferred_unit_distance;
     private float preferred_unit_distance_sqr = 0.0f;
