@@ -24,12 +24,6 @@ public class PlayerController : MonoBehaviour
 
     private const float hero_formation_distance = 0.5f;
 
-    private Transform hero_spawn_point;
-
-    void Awake() {
-        hero_spawn_point = GameObject.Find("HeroSpawnPoint").transform;
-    }
-
     public void spawn_heroes(Dictionary<Vector2Int, GameObject> heroes) {
         Vector2[] positions = new Vector2[heroes.Count];
         int index = 0;
@@ -45,7 +39,7 @@ public class PlayerController : MonoBehaviour
             Vector2 hero_formation_pos = new Vector2(pos_hero.Key.x * hero_formation_distance, pos_hero.Key.y * hero_formation_distance);
             Vector2 hero_offset = hero_formation_pos - center;
 
-            GameObject hero_go = GameObject.Instantiate(pos_hero.Value, hero_spawn_point.transform.position + (Vector3)hero_offset, Quaternion.identity, transform);
+            GameObject hero_go = GameObject.Instantiate(pos_hero.Value, transform.position + (Vector3)hero_offset, Quaternion.identity, transform);
 
             ControlledCharacter controlled_character = new ControlledCharacter();
             controlled_character.player_character = hero_go.GetComponent<PlayerCharacterController>();
