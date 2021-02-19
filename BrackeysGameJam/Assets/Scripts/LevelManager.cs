@@ -14,36 +14,33 @@ public class LevelManager : MonoBehaviour
 
     private int enemies_count;
 
+    private Dictionary<Vector2Int, GameObject> heroes_to_spawn;
+
     public static LevelManager singleton() {
         return instance;
     }
 
     private void on_scene_loaded(Scene scene, LoadSceneMode mode) {
         if (scene.name == "MainMenu") {
+            next_level = 0;
             GameObject.Find("StartGameButton").GetComponent<Button>().onClick.AddListener(start_game);
         }
 
         if (scene.name.StartsWith("Level")) {
-            in_game = true;
             set_up_game();
-        } else {
-            in_game = false;
         }
     }
 
     private void set_up_game() {
-        enemies_count = GameObject.FindGameObjectsWithTag("Enemy").Length;
-    }
-
-    public void character_died(Character character) {
+        GameObject.FindObjectOfType<PlayerController>().spawn_heroes(heroes_to_spawn);
     }
 
     private void start_game() {
-        next_level = 0;
-        play_next_level();
+        SceneManager.LoadScene("UnitShop");
     }
 
-    public void play_next_level() {
+    public void play_next_level(Dictionary<Vector2Int, GameObject> formation) {
+        heroes_to_spawn = formation;
         SceneManager.LoadScene("Level" + next_level);
         ++next_level;
     }

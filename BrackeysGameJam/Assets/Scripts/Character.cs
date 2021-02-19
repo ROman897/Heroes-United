@@ -135,7 +135,6 @@ public class Character : MonoBehaviour
         World.singleton().remove_character(transform.position, this);
         GetComponent<SpriteRenderer>().enabled = false;
         death_sound.Play(0);
-        LevelManager.singleton().character_died(this);
     }
 
     private void refresh_health_bar() {

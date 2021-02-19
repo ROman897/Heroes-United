@@ -22,28 +22,49 @@ public class PlayerController : MonoBehaviour
 
     private List<ControlledCharacter> controlled_characters = new List<ControlledCharacter>();
 
-    void Awake() {
-        GameObject[] heroes = GameObject.FindGameObjectsWithTag("Hero");
-        Vector2 center = GetCenterPoint(heroes);
+    private const float hero_formation_distance = 0.5f;
 
-        foreach (GameObject hero_go in heroes) {
+    private Transform hero_spawn_point;
+
+    void Awake() {
+        hero_spawn_point = GameObject.Find("HeroSpawnPoint").transform;
+    }
+
+    public void spawn_heroes(Dictionary<Vector2Int, GameObject> heroes) {
+        Vector2[] positions = new Vector2[heroes.Count];
+        int index = 0;
+        foreach (var pos_hero in heroes) {
+            positions[index] = new Vector2(pos_hero.Key.x * hero_formation_distance, pos_hero.Key.y * hero_formation_distance);
+            ++index;
+        }
+
+        Vector2 center = GetCenterPoint(positions);
+
+        index = 0;
+        foreach (var pos_hero in heroes) {
+            Vector2 hero_formation_pos = new Vector2(pos_hero.Key.x * hero_formation_distance, pos_hero.Key.y * hero_formation_distance);
+            Vector2 hero_offset = hero_formation_pos - center;
+
+            GameObject hero_go = GameObject.Instantiate(pos_hero.Value, hero_spawn_point.transform.position + (Vector3)hero_offset, Quaternion.identity, transform);
+
             ControlledCharacter controlled_character = new ControlledCharacter();
             controlled_character.player_character = hero_go.GetComponent<PlayerCharacterController>();
-            controlled_character.offset_from_center = (Vector2)hero_go.transform.position - center;
+            controlled_character.offset_from_center = hero_offset;
             controlled_characters.Add(controlled_character);
+            ++index;
         }
     }
 
-    Vector2 GetCenterPoint(GameObject[] points)
+    Vector2 GetCenterPoint(Vector2[] points)
     {
         if (points.Length == 1)
         {
-            return points[0].transform.position;
+            return points[0];
         }
-        var bounds = new Bounds(points[0].transform.position, Vector3.zero);
+        var bounds = new Bounds(points[0], Vector3.zero);
         for (int i = 0; i < points.Length; i++)
         {
-            bounds.Encapsulate(points[i].transform.position);
+            bounds.Encapsulate(points[i]);
         }
         return bounds.center; //returns the center point of the GamObject Array
     }

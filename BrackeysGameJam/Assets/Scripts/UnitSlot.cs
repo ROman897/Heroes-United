@@ -1,70 +1,60 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-[System.Serializable]
-public class Unit
+using UnityEngine.EventSystems;
+
+public class UnitSlot : MonoBehaviour, IDropHandler
 {
-    public string name;
-    public Sprite unitSprite;
-    public GameObject unitPrefab;
-}
-public class UnitSlot : MonoBehaviour
-{
-    [SerializeField]
-    GameObject shopMenu;
-    [SerializeField]
-    int UnitNumber;
-    [SerializeField]
-    Image slotGFX;
-    [SerializeField]
-    Unit[] units;
-    bool opened = false;
-    public static int UnitUsed = 0;
-    [SerializeField]
-    UnitSlot[] slots;
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (!PlayerPrefs.HasKey("Unit" + UnitNumber))
-            PlayerPrefs.SetString("Unit" + UnitNumber, "");
-    }
-    private void OnDestroy()
-    {
-        if (!Application.isPlaying)
-            UnitUsed = 0;
+    protected BuyableUnit my_unit; 
+
+    private DragableUnit my_dragable_unit;
+
+    void Awake() {
+        my_dragable_unit = transform.Find("DragableUnit").GetComponent<DragableUnit>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        Unit currentUnit = getUnitByName(PlayerPrefs.GetString("Unit" + UnitNumber), units);
-        if (currentUnit != null)
-        {
-            slotGFX.sprite = currentUnit.unitSprite;
-            slotGFX.color = new Color(1, 1, 1, 1);
-        }
-        else
-            slotGFX.color = new Color(1, 1, 1, 0);
-        GetComponent<Image>().color = UnitUsed == UnitNumber ? Color.grey : Color.white;
+    public BuyableUnit get_unit() {
+        return my_unit;
     }
-    public void openMenu()
-    {
-        if (UnitUsed != 0 && UnitUsed != UnitNumber)
-            slots[UnitUsed - 1].opened = false;
-        UnitUsed = opened ? 0 : UnitNumber;
-        shopMenu.SetActive(!opened);
-        opened = !opened;
+
+    public virtual bool try_take_unit() {
+        set_unit(null);
+        return true;
     }
-    Unit getUnitByName(string name, Unit[] unitArray)
-    {
-        foreach(Unit unit in unitArray)
-        {
-            if (unit.name == name)
-            {
-                return unit;
-            }
+
+    public void set_unit(BuyableUnit buyable_unit) {
+        my_unit = buyable_unit;
+        if (buyable_unit == null) {
+            my_dragable_unit.change_graphic(null);
+        } else {
+            my_dragable_unit.change_graphic(buyable_unit.icon);
         }
-        return null;
+    }
+
+    public void OnDrop(PointerEventData event_data) {
+        if (event_data.button != PointerEventData.InputButton.Left) {
+            return;
+        }
+        if (event_data.pointerDrag == null) {
+            return;
+        }
+
+        DragableUnit dragable_unit = event_data.pointerDrag.GetComponent<DragableUnit>();
+        if (dragable_unit == null) {
+            return;
+        }
+        dragable_unit.reset_position();
+        if (my_unit != null) {
+            return;
+        }
+
+        BuyableUnit offered_unit = dragable_unit.linked_slot.get_unit();
+        if (offered_unit == null) {
+            return;
+        }
+        if (!dragable_unit.linked_slot.try_take_unit()) {
+            return;
+        }
+        set_unit(offered_unit);
     }
 }
