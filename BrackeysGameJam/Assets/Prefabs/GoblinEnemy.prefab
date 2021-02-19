@@ -68,7 +68,8 @@ MonoBehaviour:
   cur_target: {fileID: 0}
   debug_target_pos: {x: 0, y: 0}
   debug_target_coords: {x: 0, y: 0}
-  attack_range: 0
+  attack_range: 0.4
+  debug: 0
 --- !u!58 &6895613212642389634
 CircleCollider2D:
   m_ObjectHideFlags: 0
