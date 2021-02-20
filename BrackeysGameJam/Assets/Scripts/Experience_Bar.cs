@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-[ExecuteInEditMode()]
+//[ExecuteInEditMode()]
 public class Experience_Bar : MonoBehaviour
 {
     public static Experience_Bar instace;
@@ -20,6 +20,7 @@ public class Experience_Bar : MonoBehaviour
 
     private void Awake()
     {
+        //DontDestroyOnLoad(gameObject);
         instace = this;
         fillamount_image = transform.GetChild(0).gameObject.GetComponent<Image>();
         current_xp_text = transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
