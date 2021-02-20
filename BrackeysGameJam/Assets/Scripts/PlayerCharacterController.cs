@@ -29,4 +29,8 @@ public class PlayerCharacterController : MonoBehaviour
             move_command(target_pos);
         }
     }
+
+    public bool is_alive() {
+        return character.is_alive();
+    }
 }

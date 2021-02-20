@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     class ControlledCharacter {
         public PlayerCharacterController player_character;
         public Vector2 offset_from_center;
+        public Vector2Int formation_coord;
+        public BuyableUnit buyable_unit;
     }
 
     private static PlayerController instance;
@@ -85,12 +87,20 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(level_over_wait_time);
 
         if (victory) {
-            LevelManager.singleton().load_shop();
+            Dictionary<Vector2Int, BuyableUnit> living_heroes = new Dictionary<Vector2Int, BuyableUnit>();
+            foreach (ControlledCharacter hero in controlled_characters) {
+                if (hero.player_character == null || !hero.player_character.is_alive()) {
+                    continue;
+                }
+                living_heroes[hero.formation_coord] = hero.buyable_unit;
+            }
+            LevelManager.singleton().level_won(living_heroes);
         } else {
+            LevelManager.singleton().load_main_menu();
         }
     }
 
-    public void spawn_heroes(Dictionary<Vector2Int, GameObject> heroes) {
+    public void spawn_heroes(Dictionary<Vector2Int, BuyableUnit> heroes) {
         Vector2[] positions = new Vector2[heroes.Count];
         int index = 0;
         foreach (var pos_hero in heroes) {
@@ -105,11 +115,13 @@ public class PlayerController : MonoBehaviour
             Vector2 hero_formation_pos = new Vector2(pos_hero.Key.x * hero_formation_distance, pos_hero.Key.y * hero_formation_distance);
             Vector2 hero_offset = hero_formation_pos - center;
 
-            GameObject hero_go = GameObject.Instantiate(pos_hero.Value, transform.position + (Vector3)hero_offset, Quaternion.identity, transform);
+            GameObject hero_go = GameObject.Instantiate(pos_hero.Value.linked_prefab, transform.position + (Vector3)hero_offset, Quaternion.identity, transform);
 
             ControlledCharacter controlled_character = new ControlledCharacter();
             controlled_character.player_character = hero_go.GetComponent<PlayerCharacterController>();
             controlled_character.offset_from_center = hero_offset;
+            controlled_character.formation_coord = pos_hero.Key;
+            controlled_character.buyable_unit = pos_hero.Value;
             controlled_characters.Add(controlled_character);
             ++index;
         }

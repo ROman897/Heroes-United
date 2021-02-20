@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a79607d8ed8271c94969d9cc6c65f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  starting_money: 80
+  money_for_level: 320000006400000096000000c8000000
 --- !u!4 &1139629181
 Transform:
   m_ObjectHideFlags: 0

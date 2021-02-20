@@ -7,7 +7,10 @@ public class Shop : MonoBehaviour
 {
     private static Shop instance;
 
-    private int money = 100;
+    private Text money_text;
+
+    [SerializeField]
+    private GameObject buyable_unit_prefab;
 
     public static Shop singleton() {
         if (instance == null) {
@@ -20,17 +23,18 @@ public class Shop : MonoBehaviour
     }
 
     public bool try_spend_money(int amount) {
-        if (amount > money) {
-            return false;
-        }
-        money -= amount;
-        return true;
+        bool ok = LevelManager.singleton().try_spend_money(amount);
+        reload_money_text();
+        return ok;
     }
 
-    [SerializeField]
-    private GameObject buyable_unit_prefab;
+    private void reload_money_text() {
+        money_text.text = LevelManager.singleton().get_money() + "$";
+    }
 
     void Awake() {
+        money_text = GameObject.Find("MoneyText").GetComponent<Text>();
+        reload_money_text();
         instance = this;
     }
 
@@ -45,6 +49,7 @@ public class Shop : MonoBehaviour
         foreach (BuyableUnit buyable_unit in Resources.LoadAll<BuyableUnit>("BuyableUnits")) {
             GameObject buyable_unit_go = GameObject.Instantiate(buyable_unit_prefab, transform);
             buyable_unit_go.GetComponent<UnitSlot>().set_unit(buyable_unit);
+            buyable_unit_go.transform.Find("PriceText").GetComponent<Text>().text = buyable_unit.price + "$";
         }
         GameObject.Find("PlayButton").GetComponent<Button>().onClick.AddListener(play_next_level);
     }

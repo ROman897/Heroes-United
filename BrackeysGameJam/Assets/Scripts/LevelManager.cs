@@ -14,7 +14,15 @@ public class LevelManager : MonoBehaviour
 
     private int enemies_count;
 
-    private Dictionary<Vector2Int, GameObject> heroes_to_spawn;
+    private Dictionary<Vector2Int, BuyableUnit> heroes = new Dictionary<Vector2Int, BuyableUnit>();
+
+    [SerializeField]
+    private int starting_money;
+
+    private int money;
+
+    [SerializeField]
+    private int[] money_for_level;
 
     public static LevelManager singleton() {
         return instance;
@@ -23,6 +31,8 @@ public class LevelManager : MonoBehaviour
     private void on_scene_loaded(Scene scene, LoadSceneMode mode) {
         if (scene.name == "MainMenu") {
             next_level = 0;
+            money = starting_money;
+            heroes = new Dictionary<Vector2Int, BuyableUnit>();
             GameObject.Find("StartGameButton").GetComponent<Button>().onClick.AddListener(start_game);
         }
 
@@ -31,15 +41,33 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public bool try_spend_money(int amount) {
+        if (money < amount) {
+            return false;
+        }
+        money -= amount;
+        return true;
+    }
+
+    public int get_money() {
+        return money;
+    }
+
     private void set_up_game() {
-        GameObject.FindObjectOfType<PlayerController>().spawn_heroes(heroes_to_spawn);
+        GameObject.FindObjectOfType<PlayerController>().spawn_heroes(heroes);
     }
 
     private void start_game() {
         load_shop();
     }
 
-    public void load_shop() {
+    public void level_won(Dictionary<Vector2Int, BuyableUnit> current_heroes) {
+        money += money_for_level[next_level - 1];
+        heroes = current_heroes;
+        load_shop();
+    }
+
+    private void load_shop() {
         SceneManager.LoadScene("UnitShop");
     }
 
@@ -47,10 +75,14 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void play_next_level(Dictionary<Vector2Int, GameObject> formation) {
-        heroes_to_spawn = formation;
+    public void play_next_level(Dictionary<Vector2Int, BuyableUnit> formation) {
+        heroes = formation;
         SceneManager.LoadScene("Level" + next_level);
         ++next_level;
+    }
+
+    public Dictionary<Vector2Int, BuyableUnit> get_remaining_heroes() {
+        return heroes;
     }
 
     void Awake() {
