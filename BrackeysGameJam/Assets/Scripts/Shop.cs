@@ -52,6 +52,7 @@ public class Shop : MonoBehaviour
         foreach (BuyableUnit buyable_unit in Resources.LoadAll<BuyableUnit>("BuyableUnits")) {
             GameObject buyable_unit_go = GameObject.Instantiate(buyable_unit_prefab, transform);
             buyable_unit_go.GetComponent<UnitSlot>().set_unit(buyable_unit);
+            buyable_unit_go.transform.Find("PriceText").GetComponent<Text>().text = buyable_unit.price + "$";
         }
         GameObject.Find("PlayButton").GetComponent<Button>().onClick.AddListener(play_next_level);
     }
