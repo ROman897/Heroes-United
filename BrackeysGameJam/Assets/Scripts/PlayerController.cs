@@ -55,6 +55,11 @@ public class PlayerController : MonoBehaviour
 
     bool victory = false;
 
+    [SerializeField]
+    private AudioSource win_level_sound;
+    [SerializeField]
+    private AudioSource lose_level_sound;
+
     public void character_died(Character character) {
         if (character.gameObject.tag == "Hero") {
             --heroes_left;
@@ -76,11 +81,13 @@ public class PlayerController : MonoBehaviour
     private void level_won() {
         fade_to_black(true);
         StartCoroutine(continue_after_level_over(true));
+        win_level_sound.Play(0);
     }
 
     private void level_lost() {
         fade_to_black(false);
         StartCoroutine(continue_after_level_over(false));
+        lose_level_sound.Play(0);
     }
 
     private IEnumerator continue_after_level_over(bool victory) {
