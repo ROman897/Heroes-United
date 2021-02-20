@@ -23,16 +23,13 @@ public class Shop : MonoBehaviour
     }
 
     public bool try_spend_money(int amount) {
-        if (amount > LevelManager.singleton().money) {
-            return false;
-        }
-        LevelManager.singleton().money -= amount;
+        bool ok = LevelManager.singleton().try_spend_money(amount);
         reload_money_text();
-        return true;
+        return ok;
     }
 
     private void reload_money_text() {
-        money_text.text = LevelManager.singleton().money + "$";
+        money_text.text = LevelManager.singleton().get_money() + "$";
     }
 
     void Awake() {

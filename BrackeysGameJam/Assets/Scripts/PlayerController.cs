@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
                 }
                 living_heroes[hero.formation_coord] = hero.buyable_unit;
             }
-            LevelManager.singleton().load_shop(living_heroes);
+            LevelManager.singleton().level_won(living_heroes);
         } else {
             LevelManager.singleton().load_main_menu();
         }
