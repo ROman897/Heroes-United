@@ -19,7 +19,7 @@ public class DragableUnit : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     void Awake() {
         canvas_group = GetComponent<CanvasGroup>();
         rect_transform = GetComponent<RectTransform>();
-        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        canvas = GameObject.Find("ShopCanvas").GetComponent<Canvas>();
         parent = transform.parent;
         drag_priority_transform = canvas.transform.Find("DragPriority");
         image = GetComponent<Image>();
