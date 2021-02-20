@@ -16,6 +16,8 @@ public class LevelManager : MonoBehaviour
 
     private Dictionary<Vector2Int, BuyableUnit> heroes;
 
+    public int money = 100;
+
     public static LevelManager singleton() {
         return instance;
     }
