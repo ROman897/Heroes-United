@@ -16,9 +16,9 @@ public class ShopFormation : MonoBehaviour
     {
         Dictionary<Vector2Int, BuyableUnit> remaining_heroes = LevelManager.singleton().get_remaining_heroes(); 
 
-        slots = new UnitSlot[formation_size.x][];
+        slots = new UnitSlot[formation_size.y][];
 
-        for (int y = 0; y < formation_size.y; ++y) {
+        for (int y = formation_size.y - 1; y >= 0; --y) {
             slots[y] = new UnitSlot[formation_size.x];
             for (int x = 0; x < formation_size.x; ++x) {
                 BuyableUnit buyable_unit;
