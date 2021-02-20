@@ -104,6 +104,7 @@ public class PlayerController : MonoBehaviour
                 ++size;
                 controlled_character.player_character.move_command(target_pos + controlled_character.offset_from_center);
             }
+            GameObject.FindGameObjectWithTag("Flag").transform.position = target_pos;
         }
     }
         void faceTowardsMouse()
