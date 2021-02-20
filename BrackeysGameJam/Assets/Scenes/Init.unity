@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starting_money: 40
-  money_for_level: 1e000000320000003c0000003c0000004600000046000000c8000000c8000000c8000000
+  money_for_level: 1e000000320000003c0000003c000000460000004600000064000000c8000000
+  max_level: 7
 --- !u!4 &1139629181
 Transform:
   m_ObjectHideFlags: 0

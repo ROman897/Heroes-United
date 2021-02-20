@@ -24,6 +24,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private int[] money_for_level;
 
+    [SerializeField]
+    private int max_level;
+
     public static LevelManager singleton() {
         return instance;
     }
@@ -66,6 +69,10 @@ public class LevelManager : MonoBehaviour
     }
 
     public void level_won(Dictionary<Vector2Int, BuyableUnit> current_heroes) {
+        if (next_level > max_level) {
+            load_main_menu();
+            return;
+        }
         money += money_for_level[next_level - 1];
         heroes = current_heroes;
         load_shop();
