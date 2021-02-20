@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5187735147144812643}
   - component: {fileID: 1253189039505349407}
   m_Layer: 11
-  m_Name: AggroRange (1)
+  m_Name: AggroRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
