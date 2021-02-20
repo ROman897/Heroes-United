@@ -36,7 +36,15 @@ public class LevelManager : MonoBehaviour
     }
 
     private void start_game() {
+        load_shop();
+    }
+
+    public void load_shop() {
         SceneManager.LoadScene("UnitShop");
+    }
+
+    public void load_main_menu() {
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void play_next_level(Dictionary<Vector2Int, GameObject> formation) {

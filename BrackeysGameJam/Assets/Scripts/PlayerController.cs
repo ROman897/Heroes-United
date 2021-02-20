@@ -9,6 +9,18 @@ public class PlayerController : MonoBehaviour
         public Vector2 offset_from_center;
     }
 
+    private static PlayerController instance;
+
+    public static PlayerController singleton() {
+        if (instance == null) {
+            instance = GameObject.FindObjectOfType<PlayerController>();
+        }
+        if (instance == null) {
+            Debug.LogError("cannot find PlayerController");
+        }
+        return instance;
+    }
+
     [SerializeField]
     private float rotation_speed;
 
@@ -23,6 +35,60 @@ public class PlayerController : MonoBehaviour
     private List<ControlledCharacter> controlled_characters = new List<ControlledCharacter>();
 
     private const float hero_formation_distance = 0.5f;
+
+    private int heroes_left = 0;
+    private int enemies_left = 0;
+
+    private bool level_over = false;
+    private bool won = false;
+
+    [SerializeField]
+    private GameObject fade_prefab;
+
+    [SerializeField]
+    private float fade_to_black_time;
+
+    [SerializeField]
+    private float level_over_wait_time;
+
+    bool victory = false;
+
+    public void character_died(Character character) {
+        if (character.gameObject.tag == "Hero") {
+            --heroes_left;
+            if (heroes_left <= 0) {
+                level_lost();
+            }
+        } else {
+            --enemies_left;
+            if (enemies_left <= 0) {
+                level_won();
+            }
+        }
+    }
+
+    private void fade_to_black(bool victory) {
+        GameObject.Instantiate(fade_prefab).GetComponent<FadeToBlack>().fade(fade_to_black_time, victory);
+    }
+
+    private void level_won() {
+        fade_to_black(true);
+        StartCoroutine(continue_after_level_over(true));
+    }
+
+    private void level_lost() {
+        fade_to_black(false);
+        StartCoroutine(continue_after_level_over(false));
+    }
+
+    private IEnumerator continue_after_level_over(bool victory) {
+        yield return new WaitForSeconds(level_over_wait_time);
+
+        if (victory) {
+            LevelManager.singleton().load_shop();
+        } else {
+        }
+    }
 
     public void spawn_heroes(Dictionary<Vector2Int, GameObject> heroes) {
         Vector2[] positions = new Vector2[heroes.Count];
@@ -47,6 +113,8 @@ public class PlayerController : MonoBehaviour
             controlled_characters.Add(controlled_character);
             ++index;
         }
+        heroes_left = heroes.Count;
+        enemies_left = GameObject.FindGameObjectsWithTag("Enemy").Length;
     }
 
     Vector2 GetCenterPoint(Vector2[] points)
