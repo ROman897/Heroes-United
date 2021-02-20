@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
 
     private int enemies_count;
 
-    private Dictionary<Vector2Int, GameObject> heroes_to_spawn;
+    private Dictionary<Vector2Int, BuyableUnit> heroes;
 
     public static LevelManager singleton() {
         return instance;
@@ -32,14 +32,15 @@ public class LevelManager : MonoBehaviour
     }
 
     private void set_up_game() {
-        GameObject.FindObjectOfType<PlayerController>().spawn_heroes(heroes_to_spawn);
+        GameObject.FindObjectOfType<PlayerController>().spawn_heroes(heroes);
     }
 
     private void start_game() {
-        load_shop();
+        load_shop(new Dictionary<Vector2Int, BuyableUnit>());
     }
 
-    public void load_shop() {
+    public void load_shop(Dictionary<Vector2Int, BuyableUnit> current_heroes) {
+        heroes = current_heroes;
         SceneManager.LoadScene("UnitShop");
     }
 
@@ -47,10 +48,14 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void play_next_level(Dictionary<Vector2Int, GameObject> formation) {
-        heroes_to_spawn = formation;
+    public void play_next_level(Dictionary<Vector2Int, BuyableUnit> formation) {
+        heroes = formation;
         SceneManager.LoadScene("Level" + next_level);
         ++next_level;
+    }
+
+    public Dictionary<Vector2Int, BuyableUnit> get_remaining_heroes() {
+        return heroes;
     }
 
     void Awake() {
