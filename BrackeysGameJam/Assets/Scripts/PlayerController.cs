@@ -59,6 +59,12 @@ public class PlayerController : MonoBehaviour
     private AudioSource win_level_sound;
     [SerializeField]
     private AudioSource lose_level_sound;
+    private Vector2 flag_offset;
+
+    private void Start()
+    {
+        flag_offset = new Vector2(0, 0.2f);
+    }
 
     public void character_died(Character character) {
         if (character.gameObject.tag == "Hero") {
@@ -191,7 +197,7 @@ public class PlayerController : MonoBehaviour
                 ++size;
                 controlled_character.player_character.move_command(target_pos + controlled_character.offset_from_center);
             }
-            GameObject.FindGameObjectWithTag("Flag").transform.position = target_pos;
+            GameObject.FindGameObjectWithTag("Flag").transform.position = target_pos + flag_offset;
         }
     }
         void faceTowardsMouse()
