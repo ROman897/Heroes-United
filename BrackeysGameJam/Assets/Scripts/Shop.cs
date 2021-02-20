@@ -28,6 +28,11 @@ public class Shop : MonoBehaviour
         return ok;
     }
 
+    public void add_money(int amount) {
+        LevelManager.singleton().add_money(amount);
+        reload_money_text();
+    }
+
     private void reload_money_text() {
         money_text.text = LevelManager.singleton().get_money() + "$";
     }

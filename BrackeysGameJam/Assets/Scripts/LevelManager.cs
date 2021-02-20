@@ -49,6 +49,10 @@ public class LevelManager : MonoBehaviour
         return true;
     }
 
+    public void add_money(int amount) {
+        money += amount;
+    }
+
     public int get_money() {
         return money;
     }
