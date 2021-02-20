@@ -127,7 +127,6 @@ public class Character : MonoBehaviour
     }
 
     private void die() {
-        Experience_Bar.instace.AddExperience(10);
         for (int i = 0; i < transform.childCount; ++i) {
             transform.GetChild(i).gameObject.SetActive(false);
         }
