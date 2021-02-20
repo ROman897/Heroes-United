@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starting_money: 80
-  money_for_level: 320000006400000096000000c8000000
+  money_for_level: 320000006400000096000000c8000000c8000000c8000000c8000000c8000000c8000000
 --- !u!4 &1139629181
 Transform:
   m_ObjectHideFlags: 0

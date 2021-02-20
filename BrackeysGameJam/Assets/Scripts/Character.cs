@@ -116,6 +116,9 @@ public class Character : MonoBehaviour
     }
 
     public void apply_effect(Effect effect) {
+        if (!alive) {
+            return;
+        }
         hp -= effect.damage;
         refresh_health_bar();
         if (hp <= 0.0f) {
