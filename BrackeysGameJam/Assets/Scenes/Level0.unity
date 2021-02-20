@@ -2743,6 +2743,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4028736284143613340, guid: 584ec69b596dccb4bbe282ffacfd7d62,
+        type: 3}
+      propertyPath: debug
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4793011435484034568, guid: 584ec69b596dccb4bbe282ffacfd7d62,
         type: 3}
       propertyPath: m_RootOrder
@@ -2751,12 +2756,12 @@ PrefabInstance:
     - target: {fileID: 4793011435484034568, guid: 584ec69b596dccb4bbe282ffacfd7d62,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.24
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 4793011435484034568, guid: 584ec69b596dccb4bbe282ffacfd7d62,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.18
+      value: 0.52
       objectReference: {fileID: 0}
     - target: {fileID: 4793011435484034568, guid: 584ec69b596dccb4bbe282ffacfd7d62,
         type: 3}
@@ -11197,6 +11202,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GoblinEnemy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793011435484034571, guid: 584ec69b596dccb4bbe282ffacfd7d62,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 584ec69b596dccb4bbe282ffacfd7d62, type: 3}

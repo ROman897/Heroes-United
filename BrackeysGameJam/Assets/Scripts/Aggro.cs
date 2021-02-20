@@ -71,7 +71,7 @@ public class Aggro : MonoBehaviour
     private void pick_new_target() {
         if (enemies_in_range.Count == 0) {
             if (debug) {
-                Debug.Log(transform.parent.gameObject.name + " cannot pick new target, nobody nearby");
+                // Debug.Log(transform.parent.gameObject.name + " cannot pick new target, nobody nearby");
             }
             return;
         }
@@ -164,7 +164,7 @@ public class Aggro : MonoBehaviour
                     continue;
                 }
 
-                float sqr_dist = ((Vector2)cur_target.transform.position - new_pos).sqrMagnitude;
+                float sqr_dist = ((Vector2)character.transform.position - new_pos).sqrMagnitude;
                 min_sqr_dist = Mathf.Min(min_sqr_dist, sqr_dist);
 
                 free_tiles.Add(new_pos);
@@ -177,14 +177,27 @@ public class Aggro : MonoBehaviour
             return;
         }
 
+        if (debug) {
+            Debug.Log("target at: " + cur_target.transform.position + " ---------------------");
+        }
+
         List<Vector2> close_tiles = new List<Vector2>();
         foreach (Vector2 free_tile in free_tiles) {
-            if (((Vector2)cur_target.transform.position - free_tile).sqrMagnitude - min_sqr_dist < epsilon) {
+            if (debug) {
+                Debug.Log("free tile at: " + free_tile + " with distance: " + ((Vector2)character.transform.position - free_tile).sqrMagnitude);
+            }
+            if (((Vector2)character.transform.position - free_tile).sqrMagnitude - min_sqr_dist < epsilon) {
+                if (debug) {
+                    Debug.Log("close tile at: " + free_tile + " with distance: " + ((Vector2)character.transform.position - free_tile).sqrMagnitude);
+                }
                 close_tiles.Add(free_tile);
             }
         }
+        if (debug) {
+            Debug.Log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        }
 
-        Vector2 chosen_pos = free_tiles[Random.Range(0, close_tiles.Count)];
+        Vector2 chosen_pos = close_tiles[Random.Range(0, close_tiles.Count)];
         last_enemy_pos = cur_target.transform.position;
         character.move_to(chosen_pos);
         debug_target_pos = chosen_pos;
@@ -211,7 +224,7 @@ public class Aggro : MonoBehaviour
         }
         if (debug) {
             Debug.Log(transform.parent.gameObject.name + " stopping at: "
-                    + transform.position + "because I am in range for attack");
+                    + transform.parent.position + "because I am in range for attack");
         }
         character.stop_movement();
     }

@@ -290,7 +290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack_effect:
     damage: 0
-  attack_cooldown: 1
+  attack_cooldown: 1.5
   attack_sound: {fileID: 408934475801418327}
   projectile_prefab: {fileID: 7153870767748557477, guid: 4ea45143f46085cad9704d5c704facf5,
     type: 3}
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character_state: 0
   character_action: 0
-  max_hp: 4
+  max_hp: 2
   rb: {fileID: 0}
   body_disappear_time: 3
   delete_after_die: 1
@@ -360,7 +360,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a8fba515152b0d94fbbebcc2ff7b80f7, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c09e8818e4e827f4d8aa871ae6cf2deb, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
