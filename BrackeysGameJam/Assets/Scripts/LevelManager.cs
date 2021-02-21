@@ -37,6 +37,7 @@ public class LevelManager : MonoBehaviour
             money = starting_money;
             heroes = new Dictionary<Vector2Int, BuyableUnit>();
             GameObject.Find("StartGameButton").GetComponent<Button>().onClick.AddListener(start_game);
+            GameObject.Find("ExitButton").GetComponent<Button>().onClick.AddListener(exit_game);
         }
 
         if (scene.name.StartsWith("Level")) {
@@ -66,6 +67,10 @@ public class LevelManager : MonoBehaviour
 
     private void start_game() {
         load_shop();
+    }
+
+    private void exit_game() {
+        Application.Quit();
     }
 
     public void level_won(Dictionary<Vector2Int, BuyableUnit> current_heroes) {
